@@ -152,6 +152,11 @@ function update(game) {
     updateShadowTexture(game.camera.x)
   }
 
+  // Dim light by 5 units every second
+  currentLifeRadius = Math.max(0, currentLifeRadius - 5 * game.time.physicsElapsed)
+  if (currentLifeRadius == 0) {
+    currentLifeRadius = (maxLifeRadius + minLifeRadius) / 2
+  }
 }
 
 function updateShadowTexture(offsetX) {
