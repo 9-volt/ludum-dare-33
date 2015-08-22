@@ -7,6 +7,11 @@ var game = new Phaser.Game(700, 600, Phaser.AUTO, '', { preload: preload, create
   , fishMinXSpeed = 100
   , fishMaxXSpeed = 200
   , fishAcceleration = 0.004
+  , shadowTexture
+  , shadowImage
+  , currentLifeRadius = 150
+  , minLifeRadius = 10
+  , maxLifeRadius = 250
 
 function preload(game) {
   game.load.spritesheet('fish-sprite', 'data/fish-sprite.png', 80, 56, 19, 2, 2);
@@ -46,6 +51,15 @@ function create() {
   light.body.mass = 1
 
   var constraint = game.physics.p2.createDistanceConstraint(fish, light, 0, [36, -7], [0, 0])
+
+  // Create the shadow texture
+  shadowTexture = game.add.bitmapData(game.width, game.height)
+
+  // Create an object that will use the bitmap as a texture
+  shadowImage = game.add.image(0, 0, shadowTexture)
+
+  // Set the blend mode to MULTIPLY. This will darken the colors of everything below this sprite.
+  shadowImage.blendMode = Phaser.blendModes.MULTIPLY
 
   game.input.keyboard.addCallbacks(game, function(ev) {
     if (ev.keyCode == 38) {
@@ -128,7 +142,39 @@ function update(game) {
     // Update position keepers
     lastGameXBound += updateStep
     gameDeltaX += updateStep
+
+    // Update shadow texture
+    updateShadowTexture(game.camera.x + updateStep)
   } else {
     background.tilePosition.x = -game.camera.view.x + gameDeltaX;
+
+    // Update shadow texture
+    updateShadowTexture(game.camera.x)
   }
+
+}
+
+function updateShadowTexture(offsetX) {
+  shadowImage.x = offsetX
+
+  // Draw shadow
+  shadowTexture.context.fillStyle = 'rgb(5, 5, 5)'
+  shadowTexture.context.fillRect(0, 0, game.width, game.height)
+
+  var lightX = light.body.x - game.camera.x - (offsetX - game.camera.x)
+    , lightY = light.body.y
+
+  // Draw circle of light with a soft edge
+  var gradient = this.shadowTexture.context.createRadialGradient(
+        lightX, lightY, currentLifeRadius * 0.25, lightX, lightY, currentLifeRadius);
+  gradient.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
+  gradient.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
+
+  shadowTexture.context.beginPath();
+  shadowTexture.context.fillStyle = gradient;
+  shadowTexture.context.arc(lightX, lightY, currentLifeRadius, 0, Math.PI*2);
+  shadowTexture.context.fill();
+
+  // This just tells the engine it should update the texture cache
+  shadowTexture.dirty = true
 }
