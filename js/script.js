@@ -25,7 +25,6 @@ function create() {
   game.physics.p2.gravity.y = 300
 
   background = game.add.tileSprite(0, 0, game.width, game.height, 'starfield')
-  // background.scale = new PIXI.Point(0.5, 0.5)
   background.fixedToCamera = true
 
   fish = game.add.sprite(200, 200, 'fish-sprite')
@@ -74,11 +73,6 @@ function create() {
       userInputX = 0
     }
   })
-
-  // console.log(arguments)
-  // var sprite = game.add.sprite(40, 100, 'fish-sprite')
-  // sprite.animations.add('walk')
-  // sprite.animations.play('walk', 10, true)
 }
 
 function update(game) {
@@ -107,39 +101,10 @@ function update(game) {
   // FISH ANIMATION SPEED
   // ====================
 
-  // console.log(150 - (Math.abs(fish.body.velocity.x) + Math.abs(fish.body.velocity.y)) / 5)
   var newDelay = 150 - (Math.abs(fish.body.velocity.x) + Math.abs(fish.body.velocity.y)) / 5
   newDelay = Math.max(50, newDelay)
   newDelay = Math.min(150, newDelay)
   fish.animations.getAnimation('move').delay = newDelay
-
-  // console.log(fish.body.rotation)
-  // fish.body.rotation = -0.5
-
-  // if (userInputX == 1) {
-  //   if (fish.body.velocity.x < fishMaxXSpeed * 0.29) {
-  //     fish.body.velocity.x = fishMaxXSpeed * 0.3
-  //   } else {
-  //     fish.body.velocity.x = Math.min(fishMaxXSpeed, fish.body.velocity.x * (1 + game.time.physicsElapsed))
-  //   }
-  // } else {
-  //   if (fish.body.velocity.x > fishMinXSpeed) {
-  //     fish.body.velocity.x *= Math.pow(0.97, Math.max(1, 60 * game.time.physicsElapsed))
-  //   } else {
-  //     fish.body.velocity.x = fishMinXSpeed
-  //   }
-  // }
-
-  // if (userInputY == 1) {
-  //   fish.body.moveUp(200)
-  // } else if (userInputY == -1) {
-  //   fish.body.moveDown(200)
-  // } else {
-  //   // fish.body.setZeroVelocity();
-  //   fish.body.moveUp(0)
-  // }
-
-  // console.log(fish.body.velocity.x, fish.body.velocity.y, game.time.physicsElapsed)
 
   if (!game.camera.atLimit.x) {
     background.tilePosition.x -= ((fish.body.velocity.x) * game.time.physicsElapsed);
