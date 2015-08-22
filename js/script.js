@@ -18,7 +18,7 @@ function preload(game) {
 
 
 function create() {
-  game.world.setBounds(0, 0, 20000, 600);
+  game.world.setBounds(0, 0, game.width * 2, game.height);
 
   game.physics.startSystem(Phaser.Physics.P2JS)
   game.physics.p2.defaultRestitution = 0.8
@@ -75,6 +75,10 @@ function create() {
   })
 }
 
+var updateStep = 200
+  , gameDeltaX = 0
+  , lastGameXBound = 0
+
 function update(game) {
   // SPEED X
   // =======
@@ -106,11 +110,25 @@ function update(game) {
   newDelay = Math.min(150, newDelay)
   fish.animations.getAnimation('move').delay = newDelay
 
-  if (!game.camera.atLimit.x) {
-    background.tilePosition.x -= ((fish.body.velocity.x) * game.time.physicsElapsed);
-  }
+  // Update game bounds in steps by updateStep (200) pixels
+  if (Math.floor((fish.position.x - updateStep) / updateStep) * updateStep != lastGameXBound) {
+    lastGameXBound = Math.floor((fish.position.x - updateStep) / updateStep) * updateStep
 
-  if (!game.camera.atLimit.y) {
-    background.tilePosition.y -= ((fish.body.velocity.y) * game.time.physicsElapsed);
+    // Update game bounds
+    game.world.setBounds(lastGameXBound, 0, game.width*2, game.height);
+
+    // Update background position
+    // BEHOLD! this is kind of magic number and works ok with game.width <= 800
+    background.tilePosition.x = -gameDeltaX + (game.width / 2 - 400);
+
+    // Update entities positions
+    fish.body.x += updateStep
+    light.body.x += updateStep
+
+    // Update position keepers
+    lastGameXBound += updateStep
+    gameDeltaX += updateStep
+  } else {
+    background.tilePosition.x = -game.camera.view.x + gameDeltaX;
   }
 }
