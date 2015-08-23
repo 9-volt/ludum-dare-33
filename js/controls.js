@@ -6,6 +6,7 @@ function Controls(game) {
   this.tracks = {
     background: null
   , lowLife: null
+  , bulik: null
   }
 
   this.setup()
@@ -23,6 +24,9 @@ Controls.prototype.setup = function() {
 
   this.tracks.lowLife = this.game.add.audio('music-low-life')
   this.tracks.lowLife.loop = true
+
+  this.tracks.bulik = this.game.add.audio('music-bulik')
+  this.tracks.bulik.loop = false
 }
 
 Controls.prototype.update = function() {

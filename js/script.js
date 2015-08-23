@@ -6,6 +6,7 @@ var game = new Phaser.Game(700, 600, Phaser.AUTO, '', { preload: preload, create
   , ceiling
   , light
   , controls
+  , collisionGroups
 
 function preload(game) {
   game.load.spritesheet('fish-sprite', 'assets/graphics/fish-sprite.png', 112, 72, 8, 0, 2);
@@ -17,6 +18,7 @@ function preload(game) {
   game.load.bitmapFont('font', 'assets/fonts/carrier_command.png', 'assets/fonts/carrier_command.xml');
   game.load.audio('music-background', 'assets/music/anglerfish_mixdown2.mp3')
   game.load.audio('music-low-life', 'assets/music/low life_01.wav')
+  game.load.audio('music-bulik', 'assets/music/bubble.wav')
   game.load.image('bubble', 'assets/graphics/bubble.png');
 }
 
@@ -26,6 +28,14 @@ function create() {
   game.physics.startSystem(Phaser.Physics.P2JS)
   game.physics.p2.defaultRestitution = 0.8
   game.physics.p2.gravity.y = 300
+
+  game.physics.p2.setImpactEvents(true);
+
+  collisionGroups = {
+    player: game.physics.p2.createCollisionGroup(),
+    terrain: game.physics.p2.createCollisionGroup()
+  }
+  game.physics.p2.updateBoundsCollisionGroup();
 
   background = game.add.tileSprite(0, 0, game.width, game.height, 'background')
   background.fixedToCamera = true

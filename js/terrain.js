@@ -24,7 +24,6 @@ var Shape = function(options) {
 }
 
 Shape.prototype.generate = function() {
-  console.log(" generating for " + this.startY + " " + this.endY)
   for (var currentX = this.startX; currentX <= this.endX; currentX ++) {
     if(!this.top) {
       var genY = 10;
@@ -69,7 +68,6 @@ var Terrain = function(game, options) {
   if (options == undefined) {
     options = {};
   };
-  console.log(options)
   this.top = options.top
 
   this.width  = options.width  || game.world.bounds.width;//game.world.bounds.width;
@@ -128,6 +126,8 @@ var Ground = function(game, shape, top) {
   this.game.physics.p2.enable([this.ground], false);
   this.ground.body.addPolygon({}, cap.collisionShape);
   this.ground.body.static = true;
+  this.ground.body.setCollisionGroup(collisionGroups.terrain);
+  this.ground.body.collides([collisionGroups.player]);
 }
 
 Ground.prototype.destroy = function() {

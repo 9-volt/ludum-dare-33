@@ -6,6 +6,7 @@ var fishDefaults = {
     , lowLife: 30
     , minLife: 10
     , maxLife: 350
+    , hitPenalty: 30
     }
 
 function Fish(game) {
@@ -31,11 +32,22 @@ Fish.prototype.setupAnimations = function() {
   this._fish.play('move')
 }
 
+Fish.prototype.hitGround = function() {
+  this.life -= fishDefaults.hitPenalty;
+  if(this.life < fishDefaults.minLife + 10) {
+    this.game.paused = true;
+  }
+}
+
 Fish.prototype.setupPhysics = function() {
   this._fish.body.gravityScale = 1
   this._fish.body.clearShapes()
   this._fish.body.loadPolygon('fish-data', 'one-fish')
   this._fish.body.mass = 1000
+  this._fish.body.setCollisionGroup(collisionGroups.player)
+  this._fish.body.collides(collisionGroups.terrain, function(b1, b2) {
+    this.hitGround()
+  }, this);
 
   this._light.body.gravityScale = 0
   this._light.body.clearShapes()
@@ -44,6 +56,7 @@ Fish.prototype.setupPhysics = function() {
   // Fish to light constraint
   this._constraint = game.physics.p2.createLockConstraint(this._fish, this._light, [-58, 24], 90, 400)
 }
+
 
 Fish.prototype.update = function() {
   var fish = this._fish // alias
@@ -101,6 +114,7 @@ Fish.prototype.moveLightX = function(offsetX) {
 
 Fish.prototype.accelerateY = function(acceleration) {
   this._fish.body.velocity.y -= acceleration
+  this.game.controls.play('bulik')
 }
 
 Object.defineProperty(Fish.prototype, 'life', {
