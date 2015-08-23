@@ -1,12 +1,8 @@
 var game = new Phaser.Game(700, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update })
   , fish
   , background
-  , cursors
   , userInputX = 0
   , userInputY = 0
-  , fishMinXSpeed = 100
-  , fishMaxXSpeed = 200
-  , fishAcceleration = 0.004
   , shadowTexture
   , shadowImage
   , currentLifeRadius = 150
@@ -34,27 +30,10 @@ function create() {
   background = game.add.tileSprite(0, 0, game.width, game.height, 'starfield')
   background.fixedToCamera = true
 
-  fish = game.add.sprite(200, 200, 'fish-sprite')
-  light = game.add.sprite(200, 200, 'light')
-  game.physics.p2.enable([fish, light], false);
-  game.camera.follow(fish);
-
-  fish.smoothed = false
-  fish.animations.add('move', [0,1,2,3,4,5,6,7, 8, 9, 10, 11], 10, true)
-  // fish.animations.add('move', [12, 13, 14, 15, 16, 17], 10, true)
-  fish.play('move')
-
-  fish.body.gravityScale = 1
-  fish.body.clearShapes()
-  fish.body.loadPolygon('fish-data', 'one-fish')
-  fish.body.mass = 1000
-
-  light.body.gravityScale = 0
-  light.body.mass = 1
+  fish = new Fish(game)
+  fish.setup() // World follows the fish
 
   squidGroup = game.add.physicsGroup(Phaser.Physics.P2JS)
-
-  var constraint = game.physics.p2.createDistanceConstraint(fish, light, 0, [36, -7], [0, 0])
 
   // Create the shadow texture
   shadowTexture = game.add.bitmapData(game.width, game.height)
@@ -67,7 +46,6 @@ function create() {
 
   terrain = new Terrain(game);
   terrain.setup();
-
 
   game.input.keyboard.addCallbacks(game, function(ev) {
     if (ev.keyCode == 38) {
@@ -83,7 +61,7 @@ function create() {
     }
 
     if (ev.keyCode == 32) {
-      fish.body.velocity.y -= 200
+      fish.accelerateY(200)
     }
     // console.log(ev.keyCode)
   }, function(ev){
@@ -102,35 +80,7 @@ var updateStep = 200
   , lastGameXBound = 0
 
 function update(game) {
-  // SPEED X
-  // =======
-  fish.body.velocity.x += fish.body.velocity.y * fishAcceleration * Math.max(1, 60 * game.time.physicsElapsed)
-  // Min velocity
-  fish.body.velocity.x = Math.max(fishMinXSpeed, fish.body.velocity.x)
-  // Max velocity
-  fish.body.velocity.x = Math.min(fishMaxXSpeed, fish.body.velocity.x)
-
-  // ROTATION
-  // ========
-  var newRotation = 0
-  if (fish.body.velocity.y > 0) {
-    newRotation = fish.body.velocity.y * 0.0005 * Math.PI
-  }  else {
-    newRotation = fish.body.velocity.y * 0.0007 * Math.PI
-  }
-
-  var rotationDiff = Math.abs(newRotation - fish.body.rotation)
-    , rotationPower = Math.min(1, Math.max(0.1, 1 - rotationDiff / 0.6))
-
-  fish.body.rotation = newRotation * rotationPower
-
-  // FISH ANIMATION SPEED
-  // ====================
-
-  var newDelay = 150 - (Math.abs(fish.body.velocity.x) + Math.abs(fish.body.velocity.y)) / 5
-  newDelay = Math.max(50, newDelay)
-  newDelay = Math.min(150, newDelay)
-  fish.animations.getAnimation('move').delay = newDelay
+  fish.update()
 
   // SQUIDS
   // ======
@@ -138,8 +88,8 @@ function update(game) {
   checkSquids()
 
   // Update game bounds in steps by updateStep (200) pixels
-  if (Math.floor((fish.position.x - updateStep) / updateStep) * updateStep != lastGameXBound) {
-    lastGameXBound = Math.floor((fish.position.x - updateStep) / updateStep) * updateStep
+  if (Math.floor((fish.getX() - updateStep) / updateStep) * updateStep != lastGameXBound) {
+    lastGameXBound = Math.floor((fish.getX() - updateStep) / updateStep) * updateStep
 
     // Update game bounds
     game.world.setBounds(lastGameXBound - game.width * 0.5, 0, game.width*2.5, game.height);
@@ -149,8 +99,8 @@ function update(game) {
     background.tilePosition.x = -gameDeltaX + (game.width / 2 - 400);
 
     // Update entities positions
-    fish.body.x += updateStep
-    light.body.x += updateStep
+    fish.moveX(updateStep)
+    fish.moveLightX(updateStep)
     updateSquids(updateStep)
     terrain.moveX(updateStep)
 
@@ -183,8 +133,8 @@ function updateShadowTexture(offsetX) {
   shadowTexture.context.fillStyle = 'rgb(5, 5, 5)'
   shadowTexture.context.fillRect(0, 0, game.width, game.height)
 
-  var lightX = light.body.x - game.camera.x - (offsetX - game.camera.x)
-    , lightY = light.body.y
+  var lightX = fish.getLightX() - game.camera.x - (offsetX - game.camera.x)
+    , lightY = fish.getLightY()
 
   // Draw circle of light with a soft edge
   var gradient = this.shadowTexture.context.createRadialGradient(
