@@ -28,13 +28,13 @@ function create() {
 
   fish = new Fish(game)
   fish.setup() // World follows the fish
+  console.log(fish._fish.position)
 
   food = new Food(game)
 
   light = new Light(game)
 
   terrain = new Terrain(game);
-  terrain.setup();
 
   text = new Text(game)
 
