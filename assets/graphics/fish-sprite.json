@@ -1,16 +1,11 @@
-{
-
+{ 
+    
     "one-fish": [
-
+        
         {
-            "density": 2, "friction": 0, "bounce": 0,
+            "density": 2, "friction": 0, "bounce": 0, 
             "filter": { "categoryBits": 1, "maskBits": 65535 },
-            "shape": [   26, 50  ,  0, 31  ,  0, 22  ,  22, 7  ,  54, 42  ,  55, 54  ]
-        } ,
-        {
-            "density": 2, "friction": 0, "bounce": 0,
-            "filter": { "categoryBits": 1, "maskBits": 65535 },
-            "shape": [   54, 42  ,  22, 7  ,  59, 15  ,  62, 32  ]
+            "shape": [   52, 19  ,  79, 19  ,  99, 25  ,  111, 59  ,  82, 68  ,  51, 60  ,  23, 34  ]
         }
     ]
 }
