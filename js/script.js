@@ -4,6 +4,7 @@ var game = new Phaser.Game(700, 600, Phaser.AUTO, '', { preload: preload, create
   , background
   , terrain
   , light
+  , text
 
 function preload(game) {
   game.load.spritesheet('fish-sprite', 'assets/graphics/fish-sprite.png', 80, 56, 19, 2, 2);
@@ -12,6 +13,7 @@ function preload(game) {
   game.load.image('starfield', 'assets/graphics/starfield.jpg');
   game.load.image('light', 'assets/graphics/light.png');
   game.load.physics('fish-data', 'assets/graphics/fish-sprite.json');
+  game.load.bitmapFont('font', 'assets/fonts/carrier_command.png', 'assets/fonts/carrier_command.xml');
 }
 
 function create() {
@@ -34,6 +36,8 @@ function create() {
   terrain = new Terrain(game);
   terrain.setup();
 
+  text = new Text(game)
+
   // Check for spaces
   game.input.keyboard.addCallbacks(game, function(ev) {
     if (ev.keyCode == 32) {
@@ -49,6 +53,7 @@ var updateStep = 200
 function update(game) {
   fish.update()
   food.update()
+  text.update()
 
   // Update game bounds in steps by updateStep (200) pixels
   if (Math.floor((fish.getX() - updateStep) / updateStep) * updateStep != lastGameXBound) {
@@ -66,6 +71,7 @@ function update(game) {
     fish.moveLightX(updateStep)
     food.moveX(updateStep)
     terrain.moveX(updateStep)
+    text.moveX(updateStep)
 
     // Update position keepers
     lastGameXBound += updateStep
