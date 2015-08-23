@@ -20,6 +20,7 @@ function preload(game) {
   game.load.audio('music-low-life', 'assets/music/low life_01.wav')
   game.load.audio('music-bulik', 'assets/music/bubble.wav')
   game.load.image('bubble', 'assets/graphics/bubble.png');
+  game.load.atlas('submarine-debris', 'assets/graphics/submarine-debris-sprite.png', 'assets/graphics/submarine-debris-sprite.json');
 }
 
 function create() {
@@ -34,7 +35,8 @@ function create() {
   collisionGroups = {
     player: game.physics.p2.createCollisionGroup(),
     terrain: game.physics.p2.createCollisionGroup(),
-    submarines: game.physics.p2.createCollisionGroup()
+    submarines: game.physics.p2.createCollisionGroup(),
+    submarinesDebris: game.physics.p2.createCollisionGroup()
   }
   game.physics.p2.updateBoundsCollisionGroup();
 

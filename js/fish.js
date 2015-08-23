@@ -2,7 +2,7 @@ var fishDefaults = {
       fishMinXSpeed: 100
     , fishMaxXSpeed: 200
     , fishAcceleration: 0.004
-    , life: 250
+    , life: 150
     , lowLife: 30
     , minLife: 10
     , maxLife: 350
@@ -55,9 +55,12 @@ Fish.prototype.setupPhysics = function() {
     this.hitGround()
   }, this);
   this._fish.body.collides(collisionGroups.submarines, function(fishBody, submarineBody, convex, box) {
-    this._fish.play('eat')
-    this.life += fishDefaults.foodLife
-    this.food.isEatenSubmarine(submarineBody)
+    if (!submarineBody.isEaten) {
+      submarineBody.isEaten = true
+      this._fish.play('eat')
+      this.life += fishDefaults.foodLife
+      this.food.isEatenSubmarine(submarineBody)
+    }
   }, this);
 
   this._light.body.gravityScale = 0
