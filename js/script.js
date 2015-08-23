@@ -2,8 +2,6 @@ var game = new Phaser.Game(700, 600, Phaser.AUTO, '', { preload: preload, create
   , fish
   , food
   , background
-  , userInputX = 0
-  , userInputY = 0
   , shadowTexture
   , shadowImage
   , currentLifeRadius = 150
@@ -47,30 +45,10 @@ function create() {
   terrain = new Terrain(game);
   terrain.setup();
 
+  // Check for spaces
   game.input.keyboard.addCallbacks(game, function(ev) {
-    if (ev.keyCode == 38) {
-      userInputY = 1
-    } else if (ev.keyCode == 40) {
-      userInputY = -1
-    }
-
-    if (ev.keyCode == 39) {
-      userInputX = 1
-    } else if (ev.keyCode == 37) {
-      userInputX = -1
-    }
-
     if (ev.keyCode == 32) {
       fish.accelerateY(200)
-    }
-    // console.log(ev.keyCode)
-  }, function(ev){
-    if (ev.keyCode == 38 || ev.keyCode == 40) {
-      userInputY = 0
-    }
-
-    if (ev.keyCode == 37 || ev.keyCode == 39) {
-      userInputX = 0
     }
   })
 }
