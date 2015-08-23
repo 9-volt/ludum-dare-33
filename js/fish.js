@@ -38,10 +38,11 @@ Fish.prototype.setupPhysics = function() {
   this._fish.body.mass = 1000
 
   this._light.body.gravityScale = 0
+  this._light.body.clearShapes()
   this._light.body.mass = 1
 
   // Fish to light constraint
-  this._constraint = game.physics.p2.createDistanceConstraint(this._fish, this._light, 0, [64, -12], [0, 0])
+  this._constraint = game.physics.p2.createLockConstraint(this._fish, this._light, [-58, 24], 90, 400)
 }
 
 Fish.prototype.update = function() {
