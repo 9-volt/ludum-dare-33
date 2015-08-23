@@ -2,12 +2,11 @@ var game = new Phaser.Game(700, 600, Phaser.AUTO, '', { preload: preload, create
   , fish
   , food
   , background
-  , shadowTexture
-  , shadowImage
   , currentLifeRadius = 150
   , minLifeRadius = 10
   , maxLifeRadius = 250
   , terrain
+  , light
 
 function preload(game) {
   game.load.spritesheet('fish-sprite', 'data/fish-sprite.png', 80, 56, 19, 2, 2);
@@ -33,14 +32,7 @@ function create() {
 
   food = new Food(game)
 
-  // Create the shadow texture
-  shadowTexture = game.add.bitmapData(game.width, game.height)
-
-  // Create an object that will use the bitmap as a texture
-  shadowImage = game.add.image(0, 0, shadowTexture)
-
-  // Set the blend mode to MULTIPLY. This will darken the colors of everything below this sprite.
-  shadowImage.blendMode = Phaser.blendModes.MULTIPLY
+  light = new Light(game)
 
   terrain = new Terrain(game);
   terrain.setup();
@@ -83,44 +75,22 @@ function update(game) {
     gameDeltaX += updateStep
 
     // Update shadow texture
-    updateShadowTexture(game.camera.x + updateStep)
+    light.setX(game.camera.x + updateStep)
+    light.glow(fish.getLightX() - game.camera.x - updateStep, fish.getLightY(), currentLifeRadius)
   } else {
     background.tilePosition.x = -game.camera.view.x + gameDeltaX;
-    // squid.x = game.camera.view.x + 100
 
     // Update shadow texture
-    updateShadowTexture(game.camera.x)
+    light.setX(game.camera.x)
+    light.glow(fish.getLightX() - game.camera.x, fish.getLightY(), currentLifeRadius)
   }
+
+  // light.glow(fish.getLightX() - game.camera.x - (offsetX - game.camera.x), fish.getLightY(), currentLifeRadius)
+  light.done()
 
   // Dim light by 5 units every second
   currentLifeRadius = Math.max(0, currentLifeRadius - 5 * game.time.physicsElapsed)
   if (currentLifeRadius == 0) {
     currentLifeRadius = (maxLifeRadius + minLifeRadius) / 2
   }
-}
-
-function updateShadowTexture(offsetX) {
-  return true
-  shadowImage.x = offsetX
-
-  // Draw shadow
-  shadowTexture.context.fillStyle = 'rgb(5, 5, 5)'
-  shadowTexture.context.fillRect(0, 0, game.width, game.height)
-
-  var lightX = fish.getLightX() - game.camera.x - (offsetX - game.camera.x)
-    , lightY = fish.getLightY()
-
-  // Draw circle of light with a soft edge
-  var gradient = this.shadowTexture.context.createRadialGradient(
-        lightX, lightY, currentLifeRadius * 0.25, lightX, lightY, currentLifeRadius);
-  gradient.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
-  gradient.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
-
-  shadowTexture.context.beginPath();
-  shadowTexture.context.fillStyle = gradient;
-  shadowTexture.context.arc(lightX, lightY, currentLifeRadius, 0, Math.PI*2);
-  shadowTexture.context.fill();
-
-  // This just tells the engine it should update the texture cache
-  shadowTexture.dirty = true
 }
