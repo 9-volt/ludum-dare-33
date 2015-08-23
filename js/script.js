@@ -10,8 +10,7 @@ var game = new Phaser.Game(700, 600, Phaser.AUTO, '', { preload: preload, create
 function preload(game) {
   game.load.spritesheet('fish-sprite', 'assets/graphics/fish-sprite.png', 80, 56, 19, 2, 2);
   game.load.spritesheet('squid-sprite', 'assets/graphics/squid-sprite.png', 118, 58, 10, 2, 2);
-  game.load.image('deep-ocean', 'assets/graphics/deep-ocean.jpg');
-  game.load.image('starfield', 'assets/graphics/starfield.jpg');
+  game.load.image('background', 'assets/graphics/background.png');
   game.load.image('light', 'assets/graphics/light.png');
   game.load.physics('fish-data', 'assets/graphics/fish-sprite.json');
   game.load.bitmapFont('font', 'assets/fonts/carrier_command.png', 'assets/fonts/carrier_command.xml');
@@ -26,7 +25,7 @@ function create() {
   game.physics.p2.defaultRestitution = 0.8
   game.physics.p2.gravity.y = 300
 
-  background = game.add.tileSprite(0, 0, game.width, game.height, 'starfield')
+  background = game.add.tileSprite(0, 0, game.width, game.height, 'background')
   background.fixedToCamera = true
 
   fish = new Fish(game)
