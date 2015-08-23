@@ -22,7 +22,6 @@ Fish.prototype.setup = function() {
 
   this.setupAnimations()
   this.setupPhysics()
-  this.setupAudio()
 }
 
 Fish.prototype.setupAnimations = function() {
@@ -43,11 +42,6 @@ Fish.prototype.setupPhysics = function() {
 
   // Fish to light constraint
   this._constraint = game.physics.p2.createDistanceConstraint(this._fish, this._light, 0, [36, -7], [0, 0])
-}
-
-Fish.prototype.setupAudio = function() {
-  this.musicLowLife = this.game.add.audio('music-low-life')
-  this.musicLowLife.loop = true
 }
 
 Fish.prototype.update = function() {
@@ -108,18 +102,6 @@ Fish.prototype.accelerateY = function(acceleration) {
   this._fish.body.velocity.y -= acceleration
 }
 
-Fish.prototype.playLowLife = function() {
-  if (!this.musicLowLife.isPlaying) {
-    this.musicLowLife.play()
-  }
-}
-
-Fish.prototype.dontPlayLowLife = function() {
-  if (this.musicLowLife.isPlaying) {
-    this.musicLowLife.stop()
-  }
-}
-
 Object.defineProperty(Fish.prototype, 'life', {
   get: function() {
     return this._life
@@ -128,9 +110,9 @@ Object.defineProperty(Fish.prototype, 'life', {
     this._life = Math.max(fishDefaults.minLife, Math.min(fishDefaults.maxLife, value))
 
     if (this._life < fishDefaults.lowLife) {
-      this.playLowLife()
+      this.game.controls.play('lowLife')
     } else {
-      this.dontPlayLowLife()
+      this.game.controls.stop('lowLife')
     }
   }
 })

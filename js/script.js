@@ -5,13 +5,13 @@ var game = new Phaser.Game(700, 600, Phaser.AUTO, '', { preload: preload, create
   , terrain
   , ceiling
   , light
-  , text
-  , musicBackground
+  , controls
 
 function preload(game) {
   game.load.spritesheet('fish-sprite', 'assets/graphics/fish-sprite.png', 80, 56, 19, 2, 2);
   game.load.spritesheet('squid-sprite', 'assets/graphics/squid-sprite.png', 118, 58, 10, 2, 2);
   game.load.spritesheet('submarine-sprite', 'assets/graphics/batiscaf-sprite.png', 118, 58, 3, 0, 0);
+  game.load.spritesheet('audio-button', 'assets/graphics/audio-sprite.png', 32, 30, 2)
   game.load.image('background', 'assets/graphics/background.png');
   game.load.image('light', 'assets/graphics/light.png');
   game.load.physics('fish-data', 'assets/graphics/fish-sprite.json');
@@ -44,11 +44,9 @@ function create() {
 
   light = new Light(game)
 
-  text = new Text(game)
-
-  musicBackground = game.add.audio('music-background')
-  musicBackground.loop = true
-  musicBackground.play()
+  controls = new Controls(game)
+  game.controls = controls // You know why
+  controls.play('background')
 
   // Check for spaces
   game.input.keyboard.addCallbacks(game, function(ev) {
@@ -65,7 +63,7 @@ var updateStep = 200
 function update(game) {
   fish.update()
   food.update()
-  text.update()
+  controls.update()
 
   // Update game bounds in steps by updateStep (200) pixels
   if (Math.floor((fish.getX() - updateStep) / updateStep) * updateStep != lastGameXBound) {
@@ -84,7 +82,6 @@ function update(game) {
     food.moveX(updateStep)
     terrain.moveX(updateStep)
     ceiling.moveX(updateStep)
-    text.moveX(updateStep)
 
     // Update position keepers
     lastGameXBound += updateStep
@@ -92,7 +89,7 @@ function update(game) {
 
     // Update shadow texture
     light.bringToTop()
-    text.bringToTop()
+    controls.bringToTop()
     light.setX(game.camera.x + updateStep)
     light.glow(fish.getLightX() - game.camera.x - updateStep, fish.getLightY(), fish.life)
   } else {
