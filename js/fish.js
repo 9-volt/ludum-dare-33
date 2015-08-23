@@ -36,6 +36,9 @@ Fish.prototype.hitGround = function() {
   this.life -= fishDefaults.hitPenalty;
   if(this.life < fishDefaults.minLife + 10) {
     this.game.paused = true;
+    setTimeout(function() {
+      this._text = this.game.add.bitmapText(this.game.camera.x + this.game.camera.width / 2 - 200 , this.game.camera.height/2, 'font','Game Over', 34);
+    }, 100)
   }
 }
 
