@@ -13,9 +13,11 @@ var game = new Phaser.Game(700, 600, Phaser.AUTO, '', { preload: preload, create
   , minLifeRadius = 10
   , maxLifeRadius = 250
   , terrain
+  , squidGroud
 
 function preload(game) {
   game.load.spritesheet('fish-sprite', 'data/fish-sprite.png', 80, 56, 19, 2, 2);
+  game.load.spritesheet('squid-sprite', 'data/squid-sprite.png', 118, 58, 10, 2, 2);
   game.load.image('deep-ocean', 'data/deep-ocean.jpg');
   game.load.image('starfield', 'data/starfield.jpg');
   game.load.image('light', 'data/light.png');
@@ -23,7 +25,7 @@ function preload(game) {
 }
 
 function create() {
-  game.world.setBounds(0, 0, game.width * 2, game.height);
+  game.world.setBounds(-game.width * 0.5, 0, game.width * 2.5, game.height);
 
   game.physics.startSystem(Phaser.Physics.P2JS)
   game.physics.p2.defaultRestitution = 0.8
@@ -49,6 +51,8 @@ function create() {
 
   light.body.gravityScale = 0
   light.body.mass = 1
+
+  squidGroup = game.add.physicsGroup(Phaser.Physics.P2JS)
 
   var constraint = game.physics.p2.createDistanceConstraint(fish, light, 0, [36, -7], [0, 0])
 
@@ -128,12 +132,17 @@ function update(game) {
   newDelay = Math.min(150, newDelay)
   fish.animations.getAnimation('move').delay = newDelay
 
+  // SQUIDS
+  // ======
+
+  checkSquids()
+
   // Update game bounds in steps by updateStep (200) pixels
   if (Math.floor((fish.position.x - updateStep) / updateStep) * updateStep != lastGameXBound) {
     lastGameXBound = Math.floor((fish.position.x - updateStep) / updateStep) * updateStep
 
     // Update game bounds
-    game.world.setBounds(lastGameXBound, 0, game.width*2, game.height);
+    game.world.setBounds(lastGameXBound - game.width * 0.5, 0, game.width*2.5, game.height);
 
     // Update background position
     // BEHOLD! this is kind of magic number and works ok with game.width <= 800
@@ -142,6 +151,7 @@ function update(game) {
     // Update entities positions
     fish.body.x += updateStep
     light.body.x += updateStep
+    updateSquids(updateStep)
     terrain.moveX(updateStep)
 
     // Update position keepers
@@ -152,6 +162,7 @@ function update(game) {
     updateShadowTexture(game.camera.x + updateStep)
   } else {
     background.tilePosition.x = -game.camera.view.x + gameDeltaX;
+    // squid.x = game.camera.view.x + 100
 
     // Update shadow texture
     updateShadowTexture(game.camera.x)
@@ -165,6 +176,7 @@ function update(game) {
 }
 
 function updateShadowTexture(offsetX) {
+  return true
   shadowImage.x = offsetX
 
   // Draw shadow
@@ -187,4 +199,37 @@ function updateShadowTexture(offsetX) {
 
   // This just tells the engine it should update the texture cache
   shadowTexture.dirty = true
+}
+
+function updateSquids(offsetX) {
+  // Check for out of game bounds squids
+  for (var i in squidGroup.children) {
+    squidGroup.children[i].body.x += offsetX
+  }
+}
+
+function checkSquids() {
+  var squid
+
+  // Check for out of game bounds squids
+  for (var i = squidGroup.children.length - 1; i >= 0; i--) {
+    squid = squidGroup.children[i]
+
+    if (squid.width + squid.x < game.camera.x) {
+      squidGroup.removeChild(squid)
+      squid.destroy()
+    }
+  }
+
+  // Allways have up to 3 squids
+  while (squidGroup.length < 3) {
+    squid = game.add.sprite(game.camera.x + Math.random() * 500, Math.random() * 500, 'squid-sprite')
+    squid.smoothed = false
+    squid.animations.add('move')
+    squid.play('move', 8, true)
+
+    squidGroup.add(squid)
+
+    squid.body.data.gravityScale = 0.01
+  }
 }
