@@ -14,3 +14,7 @@ Food.prototype.moveX = function(offset) {
   // this.squidGroup.moveX(offset)
   this.submarineGroup.moveX(offset)
 }
+
+Food.prototype.isEatenSubmarine = function(submarine) {
+  this.submarineGroup.isEaten(submarine)
+}

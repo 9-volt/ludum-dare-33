@@ -2,15 +2,17 @@ var fishDefaults = {
       fishMinXSpeed: 100
     , fishMaxXSpeed: 200
     , fishAcceleration: 0.004
-    , life: 350
+    , life: 150
     , lowLife: 30
     , minLife: 10
     , maxLife: 350
     , hitPenalty: 30
+    , foodLife: 25
     }
 
-function Fish(game) {
+function Fish(game, food) {
   this.game = game
+  this.food = food
 }
 
 Fish.prototype.setup = function() {
@@ -28,17 +30,18 @@ Fish.prototype.setup = function() {
 Fish.prototype.setupAnimations = function() {
   this._fish.smoothed = false
   this._fish.animations.add('move', [0,1,2,3], 6, true)
-  this._fish.animations.add('eat', [4,5,6,7], 6, true)
+  var animationEat = this._fish.animations.add('eat', [4,5,6,7], 20, false)
   this._fish.play('move')
+
+  animationEat.onComplete.add(function(){
+    this._fish.play('move')
+  }, this)
 }
 
 Fish.prototype.hitGround = function() {
   this.life -= fishDefaults.hitPenalty;
   if(this.life < fishDefaults.minLife + 10) {
     this.game.paused = true;
-    setTimeout(function() {
-      this._text = this.game.add.bitmapText(this.game.camera.x + this.game.camera.width / 2 - 200 , this.game.camera.height/2, 'font','Game Over', 34);
-    }, 100)
   }
 }
 
@@ -48,8 +51,13 @@ Fish.prototype.setupPhysics = function() {
   this._fish.body.loadPolygon('fish-data', 'one-fish')
   this._fish.body.mass = 1000
   this._fish.body.setCollisionGroup(collisionGroups.player)
-  this._fish.body.collides(collisionGroups.terrain, function(b1, b2) {
+  this._fish.body.collides(collisionGroups.terrain, function() {
     this.hitGround()
+  }, this);
+  this._fish.body.collides(collisionGroups.submarines, function(fishBody, submarineBody, convex, box) {
+    this._fish.play('eat')
+    this.life += fishDefaults.foodLife
+    this.food.isEatenSubmarine(submarineBody)
   }, this);
 
   this._light.body.gravityScale = 0

@@ -33,17 +33,18 @@ function create() {
 
   collisionGroups = {
     player: game.physics.p2.createCollisionGroup(),
-    terrain: game.physics.p2.createCollisionGroup()
+    terrain: game.physics.p2.createCollisionGroup(),
+    submarines: game.physics.p2.createCollisionGroup()
   }
   game.physics.p2.updateBoundsCollisionGroup();
 
   background = game.add.tileSprite(0, 0, game.width, game.height, 'background')
   background.fixedToCamera = true
 
-  fish = new Fish(game)
-  fish.setup() // World follows the fish
-
   food = new Food(game)
+
+  fish = new Fish(game, food)
+  fish.setup() // World follows the fish
 
   terrain = new Terrain(game);
   ceiling = new Terrain(game, {

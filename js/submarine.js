@@ -1,5 +1,10 @@
 function SubmarineGroup(game) {
   this.game = game
+
+  this.setup()
+}
+
+SubmarineGroup.prototype.setup = function(){
   this.submarineGroup = game.add.physicsGroup(Phaser.Physics.P2JS)
 }
 
@@ -44,6 +49,9 @@ SubmarineGroup.prototype.update = function() {
             Number.POSITIVE_INFINITY, true
         );
     submarine.body.velocity.x = Math.random() * -400;
+
+    submarine.body.setCollisionGroup(collisionGroups.submarines);
+    submarine.body.collides([collisionGroups.player]);
   }
 }
 
@@ -51,4 +59,8 @@ SubmarineGroup.prototype.moveX = function(offset) {
   for (var i in this.submarineGroup.children) {
     this.submarineGroup.children[i].body.x += offset
   }
+}
+
+SubmarineGroup.prototype.isEaten = function(submarine) {
+  console.log(submarine)
 }
