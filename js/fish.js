@@ -8,6 +8,7 @@ var fishDefaults = {
     , maxLife: 350
     , hitPenalty: 30
     , foodLife: 25
+    , hitDelay: 300 // at most one hit every X milliseconds
     }
 
 function Fish(game, food) {
@@ -19,6 +20,7 @@ Fish.prototype.setup = function() {
   this._fish = game.add.sprite(200, 200, 'fish-sprite')
   this._light = game.add.sprite(200, 200, 'light')
   this._life = fishDefaults.life
+  this._lastHit = 0
 
   this.game.physics.p2.enable([this._fish, this._light], false)
   this.game.camera.follow(this._fish)
@@ -39,9 +41,13 @@ Fish.prototype.setupAnimations = function() {
 }
 
 Fish.prototype.hitGround = function() {
-  this.life -= fishDefaults.hitPenalty;
-  if(this.life < fishDefaults.minLife + 10) {
-    this.game.paused = true;
+  if (Date.now() - this._lastHit > fishDefaults.hitDelay) {
+    this._lastHit = Date.now()
+
+    this.life -= fishDefaults.hitPenalty;
+    if(this.life < fishDefaults.minLife + 10) {
+      this.game.paused = true;
+    }
   }
 }
 
