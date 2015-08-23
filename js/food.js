@@ -18,3 +18,7 @@ Food.prototype.moveX = function(offset) {
 Food.prototype.isEatenSubmarine = function(submarine) {
   this.submarineGroup.isEaten(submarine)
 }
+
+Food.prototype.glow = function(light) {
+  this.submarineGroup.glow(light)
+}

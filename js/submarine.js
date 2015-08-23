@@ -52,6 +52,8 @@ SubmarineGroup.prototype.update = function() {
 
     submarine.body.setCollisionGroup(collisionGroups.submarines);
     submarine.body.collides([collisionGroups.player]);
+    submarine.lastGlow = 10
+    submarine.glowIncreasing = false
   }
 }
 
@@ -61,6 +63,37 @@ SubmarineGroup.prototype.moveX = function(offset) {
   }
 }
 
+SubmarineGroup.prototype.glow = function(light) {
+  for (var i = this.submarineGroup.children.length - 1; i >= 0; i--) {
+    submarine = this.submarineGroup.children[i]
+
+    // Draw each submarine glow
+    if (submarine.body && submarine.width + submarine.x > game.camera.x) {
+      if (submarine.glowIncreasing) {
+        submarine.lastGlow += game.time.physicsElapsed * 10
+        if (submarine.lastGlow > 8) {
+          submarine.lastGlow = 8
+          submarine.glowIncreasing = false
+        }
+      } else {
+        submarine.lastGlow -= game.time.physicsElapsed * 10
+        if (submarine.lastGlow < 2) {
+          submarine.lastGlow = 2
+          submarine.glowIncreasing = true
+        }
+      }
+
+      light.glow(submarine.x - this.game.camera.x - 7, submarine.y + 3, submarine.lastGlow)
+    }
+  }
+}
+
 SubmarineGroup.prototype.isEaten = function(submarine) {
-  console.log(submarine)
+  this.creteSubmarineDebris(submarine.x, submarine.y)
+  this.submarineGroup.removeChild(submarine.sprite)
+  submarine.sprite && submarine.sprite.destroy()
+}
+
+SubmarineGroup.prototype.creteSubmarineDebris = function(x, y) {
+  console.log(x, y)
 }

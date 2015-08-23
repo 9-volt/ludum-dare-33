@@ -10,7 +10,7 @@ var game = new Phaser.Game(700, 600, Phaser.AUTO, '', { preload: preload, create
 
 function preload(game) {
   game.load.spritesheet('fish-sprite', 'assets/graphics/fish-sprite.png', 112, 72, 8, 0, 2);
-  game.load.spritesheet('submarine-sprite', 'assets/graphics/batiscaf-sprite.png', 118, 58, 3, 0, 0);
+  game.load.spritesheet('submarine-sprite', 'assets/graphics/batiscaf-sprite.png', 108, 58, 4, 0, 2);
   game.load.spritesheet('audio-button', 'assets/graphics/audio-sprite.png', 32, 30, 2)
   game.load.image('background', 'assets/graphics/background.png');
   game.load.image('light', 'assets/graphics/light.png');
@@ -111,6 +111,7 @@ function update(game) {
     light.glow(fish.getLightX() - game.camera.x, fish.getLightY(), fish.life)
   }
 
+  food.glow(light)
   // light.glow(fish.getLightX() - game.camera.x - (offsetX - game.camera.x), fish.getLightY(), currentLifeRadius)
   light.done()
 
