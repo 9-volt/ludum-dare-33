@@ -6,12 +6,12 @@ var game = new Phaser.Game(700, 600, Phaser.AUTO, '', { preload: preload, create
   , light
 
 function preload(game) {
-  game.load.spritesheet('fish-sprite', 'data/fish-sprite.png', 80, 56, 19, 2, 2);
-  game.load.spritesheet('squid-sprite', 'data/squid-sprite.png', 118, 58, 10, 2, 2);
-  game.load.image('deep-ocean', 'data/deep-ocean.jpg');
-  game.load.image('starfield', 'data/starfield.jpg');
-  game.load.image('light', 'data/light.png');
-  game.load.physics('fish-data', 'data/fish-sprite.json');
+  game.load.spritesheet('fish-sprite', 'assets/graphics/fish-sprite.png', 80, 56, 19, 2, 2);
+  game.load.spritesheet('squid-sprite', 'assets/graphics/squid-sprite.png', 118, 58, 10, 2, 2);
+  game.load.image('deep-ocean', 'assets/graphics/deep-ocean.jpg');
+  game.load.image('starfield', 'assets/graphics/starfield.jpg');
+  game.load.image('light', 'assets/graphics/light.png');
+  game.load.physics('fish-data', 'assets/graphics/fish-sprite.json');
 }
 
 function create() {
