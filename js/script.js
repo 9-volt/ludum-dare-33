@@ -5,6 +5,7 @@ var game = new Phaser.Game(700, 600, Phaser.AUTO, '', { preload: preload, create
   , terrain
   , light
   , text
+  , musicBackground
 
 function preload(game) {
   game.load.spritesheet('fish-sprite', 'assets/graphics/fish-sprite.png', 80, 56, 19, 2, 2);
@@ -14,6 +15,8 @@ function preload(game) {
   game.load.image('light', 'assets/graphics/light.png');
   game.load.physics('fish-data', 'assets/graphics/fish-sprite.json');
   game.load.bitmapFont('font', 'assets/fonts/carrier_command.png', 'assets/fonts/carrier_command.xml');
+  game.load.audio('music-background', 'assets/music/anglerfish_mixdown2.mp3')
+  game.load.audio('music-low-life', 'assets/music/low life_01.wav')
 }
 
 function create() {
@@ -36,6 +39,10 @@ function create() {
   terrain = new Terrain(game);
 
   text = new Text(game)
+
+  musicBackground = game.add.audio('music-background')
+  musicBackground.loop = true
+  musicBackground.play()
 
   // Check for spaces
   game.input.keyboard.addCallbacks(game, function(ev) {
