@@ -34,9 +34,9 @@ function create() {
 
   food = new Food(game)
 
-  light = new Light(game)
-
   terrain = new Terrain(game);
+
+  light = new Light(game)
 
   text = new Text(game)
 
@@ -84,6 +84,8 @@ function update(game) {
     gameDeltaX += updateStep
 
     // Update shadow texture
+    light.bringToTop()
+    text.bringToTop()
     light.setX(game.camera.x + updateStep)
     light.glow(fish.getLightX() - game.camera.x - updateStep, fish.getLightY(), fish.life)
   } else {

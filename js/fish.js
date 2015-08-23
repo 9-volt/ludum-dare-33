@@ -2,10 +2,10 @@ var fishDefaults = {
       fishMinXSpeed: 100
     , fishMaxXSpeed: 200
     , fishAcceleration: 0.004
-    , life: 150
+    , life: 350
     , lowLife: 30
     , minLife: 10
-    , maxLife: 300
+    , maxLife: 350
     }
 
 function Fish(game) {

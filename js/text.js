@@ -16,6 +16,9 @@ Text.prototype.update = function() {
   this._text.text = pad(Math.floor(this.progress), 5) // Progresse in physics seconds
 }
 
+Text.prototype.bringToTop = function() {
+  this._text.parent.bringToTop(this._text) // don't ask why
+};
 Text.prototype.moveX = function() {
   this._text.x += 200
 }
