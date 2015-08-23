@@ -127,7 +127,7 @@ var Ground = function(game, shape, top) {
   this.ground.body.addPolygon({}, cap.collisionShape);
   this.ground.body.static = true;
   this.ground.body.setCollisionGroup(collisionGroups.terrain);
-  this.ground.body.collides([collisionGroups.player]);
+  this.ground.body.collides([collisionGroups.player, collisionGroups.submarines]);
 }
 
 Ground.prototype.destroy = function() {

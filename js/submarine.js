@@ -33,25 +33,21 @@ SubmarineGroup.prototype.update = function() {
   while (this.submarineGroup.length < 2) {
     var coords = this.chooseCoords();
     submarine = game.add.sprite(game.camera.x + coords.x, coords.y, 'submarine-sprite')
-    submarine.scale.setTo(0.5, 0.5)
-    submarine.anchor.setTo(0,5, 0.5)
+    submarine.scale.setTo(0.3, 0.3)
+    submarine.anchor.setTo(0,3, 0.3)
 
     submarine.smoothed = false
     submarine.animations.add('move')
     submarine.play('move', 8, true)
 
     this.submarineGroup.add(submarine)
-    submarine.body.data.gravityScale = 0.01
-    this.game.add.tween(submarine.body)
-        .to(
-            { angle: -15 },
-            500, Phaser.Easing.Sinusoidal.InOut, true, 0,
-            Number.POSITIVE_INFINITY, true
-        );
-    submarine.body.velocity.x = Math.random() * -400;
+    submarine.body.data.gravityScale = (Math.random() - 0.5) / 7
+    this.game.add.tween(submarine.body).to({angle: -15}, 500, Phaser.Easing.Sinusoidal.InOut, true, 0,
+      Number.POSITIVE_INFINITY, true);
+    submarine.body.velocity.x = Math.random() * -50;
 
     submarine.body.setCollisionGroup(collisionGroups.submarines);
-    submarine.body.collides([collisionGroups.player]);
+    submarine.body.collides([collisionGroups.player, collisionGroups.terrain]);
     submarine.lastGlow = 10
     submarine.glowIncreasing = false
   }
@@ -77,13 +73,13 @@ SubmarineGroup.prototype.glow = function(light) {
         }
       } else {
         submarine.lastGlow -= game.time.physicsElapsed * 10
-        if (submarine.lastGlow < 2) {
-          submarine.lastGlow = 2
+        if (submarine.lastGlow < 1) {
+          submarine.lastGlow = 1
           submarine.glowIncreasing = true
         }
       }
 
-      light.glow(submarine.x - this.game.camera.x - 7, submarine.y + 3, submarine.lastGlow)
+      light.glow(submarine.x - this.game.camera.x - 4, submarine.y + 2, submarine.lastGlow)
     }
   }
 }

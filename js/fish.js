@@ -30,7 +30,7 @@ Fish.prototype.setup = function() {
 Fish.prototype.setupAnimations = function() {
   this._fish.smoothed = false
   this._fish.animations.add('move', [0,1,2,3], 6, true)
-  var animationEat = this._fish.animations.add('eat', [4,5,6,7], 20, false)
+  var animationEat = this._fish.animations.add('eat', [4,5,6,7], 30, false)
   this._fish.play('move')
 
   animationEat.onComplete.add(function(){
