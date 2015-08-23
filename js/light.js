@@ -26,9 +26,12 @@ Light.prototype.setX = function(offset) {
   this.shadowTexture.context.fillRect(0, 0, this.game.width, this.game.height)
 }
 
+Light.prototype.bringToTop = function() {
+  this.shadowImage.bringToTop()
+};
+
 Light.prototype.glow = function(lightX, lightY, radius) {
   if (!this.lightIsEnabled) return false;
-
   // Draw circle of light with a soft edge
   var gradient = this.shadowTexture.context.createRadialGradient(lightX, lightY, radius * 0.25, lightX, lightY, radius);
   gradient.addColorStop(0, 'rgba(255, 255, 255, 1.0)');

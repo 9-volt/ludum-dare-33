@@ -57,7 +57,7 @@ var Terrain = function(game, options) {
     options = {};
   };
 
-  this.width  = options.width  || 1100;//game.world.bounds.width;
+  this.width  = options.width  || game.world.bounds.width;//game.world.bounds.width;
   this.height = options.height || game.world.bounds.height / 2;
 
   this.startX = options.startX || game.world.bounds.x;
@@ -93,14 +93,14 @@ var Ground = function(game, shape) {
 
   this.ground = this.game.add.graphics(0, 0);
   this.groundTexture = this.game.add.graphics(0, 0);
-  this.groundTexture.beginFill(0xFF33ff);
+  this.groundTexture.beginFill(0x0d1229);
   var cap = this.shape.cap();
   var polygon = new Phaser.Polygon(cap.shape);
 
   this.groundTexture.drawPolygon(polygon.points);
   this.groundTexture.endFill();
 
-  this.game.physics.p2.enable([this.ground], true);
+  this.game.physics.p2.enable([this.ground], false);
   this.ground.body.addPolygon({}, cap.collisionShape);
   this.ground.body.static = true;
 }
