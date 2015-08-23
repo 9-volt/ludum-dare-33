@@ -21,6 +21,8 @@ function preload(game) {
   game.load.audio('music-bulik', 'assets/music/bubble.wav')
   game.load.image('bubble', 'assets/graphics/bubble.png');
   game.load.atlas('submarine-debris', 'assets/graphics/submarine-debris-sprite.png', 'assets/graphics/submarine-debris-sprite.json');
+  game.load.audio('music-bite1', 'assets/music/bite1.wav')
+  game.load.audio('music-bite2', 'assets/music/bite2.wav')
 }
 
 function create() {

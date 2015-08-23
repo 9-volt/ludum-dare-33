@@ -27,6 +27,12 @@ Controls.prototype.setup = function() {
 
   this.tracks.bulik = this.game.add.audio('music-bulik')
   this.tracks.bulik.loop = false
+
+  this.tracks.bite1 = this.game.add.audio('music-bite1')
+  this.tracks.bite1.loop = false
+
+  this.tracks.bite2 = this.game.add.audio('music-bite2')
+  this.tracks.bite2.loop = false
 }
 
 Controls.prototype.update = function() {

@@ -58,6 +58,7 @@ Fish.prototype.setupPhysics = function() {
     if (!submarineBody.isEaten) {
       submarineBody.isEaten = true
       this._fish.play('eat')
+      this.game.controls.play('bite' + (Math.random() > 0.5 ? 1 : 2))
       this.life += fishDefaults.foodLife
       this.food.isEatenSubmarine(submarineBody)
     }
