@@ -56,11 +56,16 @@ Fish.prototype.setupPhysics = function() {
   }, this);
   this._fish.body.collides(collisionGroups.submarines, function(fishBody, submarineBody, convex, box) {
     if (!submarineBody.isEaten) {
-      submarineBody.isEaten = true
-      this._fish.play('eat')
-      this.game.controls.play('bite' + (Math.random() > 0.5 ? 1 : 2))
-      this.life += fishDefaults.foodLife
-      this.food.isEatenSubmarine(submarineBody)
+      var diffX = submarineBody.x - fishBody.x
+        , diffY = submarineBody.y - fishBody.y
+
+      if (diffX > 40 && diffY < 45 && diffY > -45) {
+        submarineBody.isEaten = true
+        this._fish.play('eat')
+        this.game.controls.play('bite' + (Math.random() > 0.5 ? 1 : 2))
+        this.life += fishDefaults.foodLife
+        this.food.isEatenSubmarine(submarineBody)
+      }
     }
   }, this);
 

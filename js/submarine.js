@@ -57,6 +57,7 @@ SubmarineGroup.prototype.update = function() {
     this.game.add.tween(submarine.body).to({angle: -15}, 500, Phaser.Easing.Sinusoidal.InOut, true, 0,
       Number.POSITIVE_INFINITY, true);
     submarine.body.velocity.x = Math.random() * -50;
+    submarine.body.mass = 100
 
     submarine.body.setCollisionGroup(collisionGroups.submarines);
     submarine.body.collides([collisionGroups.player, collisionGroups.terrain]);
