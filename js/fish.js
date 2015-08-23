@@ -26,8 +26,8 @@ Fish.prototype.setup = function() {
 
 Fish.prototype.setupAnimations = function() {
   this._fish.smoothed = false
-  this._fish.animations.add('move', [0,1,2,3,4,5,6,7, 8, 9, 10, 11], 10, true)
-  // this._fish.animations.add('move', [12, 13, 14, 15, 16, 17], 10, true)
+  this._fish.animations.add('move', [0,1,2,3], 6, true)
+  this._fish.animations.add('eat', [4,5,6,7], 6, true)
   this._fish.play('move')
 }
 
@@ -38,10 +38,11 @@ Fish.prototype.setupPhysics = function() {
   this._fish.body.mass = 1000
 
   this._light.body.gravityScale = 0
+  this._light.body.clearShapes()
   this._light.body.mass = 1
 
   // Fish to light constraint
-  this._constraint = game.physics.p2.createDistanceConstraint(this._fish, this._light, 0, [36, -7], [0, 0])
+  this._constraint = game.physics.p2.createLockConstraint(this._fish, this._light, [-58, 24], 90, 400)
 }
 
 Fish.prototype.update = function() {

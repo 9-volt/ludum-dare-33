@@ -8,8 +8,7 @@ var game = new Phaser.Game(700, 600, Phaser.AUTO, '', { preload: preload, create
   , controls
 
 function preload(game) {
-  game.load.spritesheet('fish-sprite', 'assets/graphics/fish-sprite.png', 80, 56, 19, 2, 2);
-  game.load.spritesheet('squid-sprite', 'assets/graphics/squid-sprite.png', 118, 58, 10, 2, 2);
+  game.load.spritesheet('fish-sprite', 'assets/graphics/fish-sprite.png', 112, 72, 8, 0, 2);
   game.load.spritesheet('submarine-sprite', 'assets/graphics/batiscaf-sprite.png', 118, 58, 3, 0, 0);
   game.load.spritesheet('audio-button', 'assets/graphics/audio-sprite.png', 32, 30, 2)
   game.load.image('background', 'assets/graphics/background.png');
