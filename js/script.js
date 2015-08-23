@@ -2,9 +2,6 @@ var game = new Phaser.Game(700, 600, Phaser.AUTO, '', { preload: preload, create
   , fish
   , food
   , background
-  , currentLifeRadius = 150
-  , minLifeRadius = 10
-  , maxLifeRadius = 250
   , terrain
   , light
 
@@ -76,21 +73,18 @@ function update(game) {
 
     // Update shadow texture
     light.setX(game.camera.x + updateStep)
-    light.glow(fish.getLightX() - game.camera.x - updateStep, fish.getLightY(), currentLifeRadius)
+    light.glow(fish.getLightX() - game.camera.x - updateStep, fish.getLightY(), fish.life)
   } else {
     background.tilePosition.x = -game.camera.view.x + gameDeltaX;
 
     // Update shadow texture
     light.setX(game.camera.x)
-    light.glow(fish.getLightX() - game.camera.x, fish.getLightY(), currentLifeRadius)
+    light.glow(fish.getLightX() - game.camera.x, fish.getLightY(), fish.life)
   }
 
   // light.glow(fish.getLightX() - game.camera.x - (offsetX - game.camera.x), fish.getLightY(), currentLifeRadius)
   light.done()
 
   // Dim light by 5 units every second
-  currentLifeRadius = Math.max(0, currentLifeRadius - 5 * game.time.physicsElapsed)
-  if (currentLifeRadius == 0) {
-    currentLifeRadius = (maxLifeRadius + minLifeRadius) / 2
-  }
+  fish.life -= 5 * game.time.physicsElapsed
 }

@@ -2,6 +2,9 @@ var fishDefaults = {
       fishMinXSpeed: 100
     , fishMaxXSpeed: 200
     , fishAcceleration: 0.004
+    , life: 150
+    , minLife: 10
+    , maxLife: 300
     }
 
 function Fish(game) {
@@ -11,6 +14,7 @@ function Fish(game) {
 Fish.prototype.setup = function() {
   this._fish = game.add.sprite(200, 200, 'fish-sprite')
   this._light = game.add.sprite(200, 200, 'light')
+  this._life = fishDefaults.life
 
   this.game.physics.p2.enable([this._fish, this._light], false)
   this.game.camera.follow(this._fish)
@@ -96,3 +100,12 @@ Fish.prototype.moveLightX = function(offsetX) {
 Fish.prototype.accelerateY = function(acceleration) {
   this._fish.body.velocity.y -= acceleration
 }
+
+Object.defineProperty(Fish.prototype, 'life', {
+  get: function() {
+    return this._life
+  }
+, set: function(value) {
+    this._life = Math.max(fishDefaults.minLife, Math.min(fishDefaults.maxLife, value))
+  }
+})
