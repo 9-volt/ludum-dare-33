@@ -1,10 +1,12 @@
 var Noise = new SimplexNoise();
 var CurrentNoiseGen = 0;
+var CurrentTopNoiseGen = 0;
 var Shape = function(options) {
   this.startX = options.startX;
   this.endX   = options.endX;
   this.startY = options.startY;
   this.endY   = options.endY;
+  this.top = options.top || false;
   this.numPoints = options.numPoints || this.endX - this.startX;
   this.collisionDiscretization = options.collisionDiscretization || 20;
   this.simplex = Noise;
@@ -24,13 +26,23 @@ var Shape = function(options) {
 Shape.prototype.generate = function() {
   console.log(" generating for " + this.startY + " " + this.endY)
   for (var currentX = this.startX; currentX <= this.endX; currentX ++) {
-    CurrentNoiseGen +=1;
-    var largeNoise = this.simplex.noise(CurrentNoiseGen / 10000, 0)
-    var mediumNoise = this.simplex.noise(CurrentNoiseGen / 200, 0)
-    var smallNoise = this.simplex.noise(CurrentNoiseGen / 10, CurrentNoiseGen / 10)
-    var miniNoise = this.simplex.noise(CurrentNoiseGen / 1, CurrentNoiseGen / 10)
-    var currentY = this.yScale(largeNoise + mediumNoise)
-
+    if(!this.top) {
+      var genY = 10;
+      CurrentNoiseGen +=1;
+      var largeNoise = this.simplex.noise(CurrentNoiseGen / 10000, genY)
+      var mediumNoise = this.simplex.noise(CurrentNoiseGen / 200, genY)
+      var smallNoise = this.simplex.noise(CurrentNoiseGen / 10, CurrentNoiseGen / 10)
+      var miniNoise = this.simplex.noise(CurrentNoiseGen / 1, CurrentNoiseGen / 10)
+      var currentY = this.yScale(largeNoise + mediumNoise)
+    } else {
+      var genY = 0;
+      CurrentTopNoiseGen += 1;
+      var largeNoise = this.simplex.noise(CurrentTopNoiseGen / 10000, genY)
+      var mediumNoise = this.simplex.noise(CurrentTopNoiseGen / 200, genY)
+      var smallNoise = this.simplex.noise(CurrentTopNoiseGen / 10, CurrentTopNoiseGen / 10)
+      var miniNoise = this.simplex.noise(CurrentTopNoiseGen / 1, CurrentTopNoiseGen / 10)
+      var currentY = this.yScale(largeNoise + mediumNoise)
+    }
     if (currentX % this.collisionDiscretization == 0) {
       this.collisionShape.push(currentX, this.yScale(largeNoise + mediumNoise));
     };
@@ -84,7 +96,7 @@ var Terrain = function(game, options) {
 Terrain.prototype.addGround = function() {
   var shape = new Shape({
     startX: this.startX, endX: this.endX,
-    startY: this.startY, endY: this.endY
+    startY: this.startY, endY: this.endY, top: this.top
   });
   this.shapes.push(shape);
   this.grounds.push(new Ground(this.game, shape, this.top))

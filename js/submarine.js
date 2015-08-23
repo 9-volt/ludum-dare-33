@@ -20,6 +20,7 @@ SubmarineGroup.prototype.update = function() {
     if (submarine.width + submarine.x < game.camera.x) {
       this.submarineGroup.removeChild(submarine)
       submarine.destroy()
+      submarine = null;
     }
   }
 

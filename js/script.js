@@ -18,6 +18,7 @@ function preload(game) {
   game.load.bitmapFont('font', 'assets/fonts/carrier_command.png', 'assets/fonts/carrier_command.xml');
   game.load.audio('music-background', 'assets/music/anglerfish_mixdown2.mp3')
   game.load.audio('music-low-life', 'assets/music/low life_01.wav')
+  game.load.image('bubble', 'assets/graphics/bubble.png');
 }
 
 function create() {
