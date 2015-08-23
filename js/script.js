@@ -1,5 +1,6 @@
 var game = new Phaser.Game(700, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update })
   , fish
+  , food
   , background
   , userInputX = 0
   , userInputY = 0
@@ -9,7 +10,6 @@ var game = new Phaser.Game(700, 600, Phaser.AUTO, '', { preload: preload, create
   , minLifeRadius = 10
   , maxLifeRadius = 250
   , terrain
-  , squidGroud
 
 function preload(game) {
   game.load.spritesheet('fish-sprite', 'data/fish-sprite.png', 80, 56, 19, 2, 2);
@@ -33,7 +33,7 @@ function create() {
   fish = new Fish(game)
   fish.setup() // World follows the fish
 
-  squidGroup = game.add.physicsGroup(Phaser.Physics.P2JS)
+  food = new Food(game)
 
   // Create the shadow texture
   shadowTexture = game.add.bitmapData(game.width, game.height)
@@ -81,11 +81,7 @@ var updateStep = 200
 
 function update(game) {
   fish.update()
-
-  // SQUIDS
-  // ======
-
-  checkSquids()
+  food.update()
 
   // Update game bounds in steps by updateStep (200) pixels
   if (Math.floor((fish.getX() - updateStep) / updateStep) * updateStep != lastGameXBound) {
@@ -101,7 +97,7 @@ function update(game) {
     // Update entities positions
     fish.moveX(updateStep)
     fish.moveLightX(updateStep)
-    updateSquids(updateStep)
+    food.moveX(updateStep)
     terrain.moveX(updateStep)
 
     // Update position keepers
@@ -149,37 +145,4 @@ function updateShadowTexture(offsetX) {
 
   // This just tells the engine it should update the texture cache
   shadowTexture.dirty = true
-}
-
-function updateSquids(offsetX) {
-  // Check for out of game bounds squids
-  for (var i in squidGroup.children) {
-    squidGroup.children[i].body.x += offsetX
-  }
-}
-
-function checkSquids() {
-  var squid
-
-  // Check for out of game bounds squids
-  for (var i = squidGroup.children.length - 1; i >= 0; i--) {
-    squid = squidGroup.children[i]
-
-    if (squid.width + squid.x < game.camera.x) {
-      squidGroup.removeChild(squid)
-      squid.destroy()
-    }
-  }
-
-  // Allways have up to 3 squids
-  while (squidGroup.length < 3) {
-    squid = game.add.sprite(game.camera.x + Math.random() * 500, Math.random() * 500, 'squid-sprite')
-    squid.smoothed = false
-    squid.animations.add('move')
-    squid.play('move', 8, true)
-
-    squidGroup.add(squid)
-
-    squid.body.data.gravityScale = 0.01
-  }
 }
