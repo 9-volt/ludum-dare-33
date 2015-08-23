@@ -1,3 +1,12 @@
+var submarineDefaults = {
+      scale: 0.3
+    , creationDelay: 1200
+    , maxCount: 6
+    , defaultGlow: 7
+    , maxGlow: 8
+    , minGlow: 1
+    }
+
 function SubmarineGroup(game) {
   this.game = game
 
@@ -7,6 +16,8 @@ function SubmarineGroup(game) {
 SubmarineGroup.prototype.setup = function(){
   this.submarineGroup = game.add.physicsGroup(Phaser.Physics.P2JS)
   this.submarineDebrisGroup = game.add.physicsGroup(Phaser.Physics.P2JS)
+
+  this._lastCreatedAt = 0
 }
 
 SubmarineGroup.prototype.chooseCoords = function(){
@@ -42,11 +53,14 @@ SubmarineGroup.prototype.update = function() {
   }
 
   // Allways have up to 3 submarines
-  while (this.submarineGroup.length < 4) {
+  while (this.submarineGroup.length < submarineDefaults.maxCount) {
+    if (Date.now() - this._lastCreatedAt < submarineDefaults.creationDelay) break;
+    this._lastCreatedAt = Date.now()
+
     var coords = this.chooseCoords();
     submarine = game.add.sprite(game.camera.x + coords.x, coords.y, 'submarine-sprite')
-    submarine.scale.setTo(0.3, 0.3)
-    submarine.anchor.setTo(0,3, 0.3)
+    submarine.scale.setTo(submarineDefaults.scale, submarineDefaults.scale)
+    submarine.anchor.setTo(submarineDefaults.scale, submarineDefaults.scale)
 
     submarine.smoothed = false
     submarine.animations.add('move')
@@ -61,7 +75,7 @@ SubmarineGroup.prototype.update = function() {
 
     submarine.body.setCollisionGroup(collisionGroups.submarines);
     submarine.body.collides([collisionGroups.player, collisionGroups.terrain]);
-    submarine.lastGlow = 10
+    submarine.lastGlow = submarineDefaults.defaultGlow
     submarine.glowIncreasing = false
   }
 }
@@ -96,14 +110,14 @@ SubmarineGroup.prototype.glowSubmarine = function(light, submarine) {
   if (submarine.body && submarine.width + submarine.x > game.camera.x) {
     if (submarine.glowIncreasing) {
       submarine.lastGlow += game.time.physicsElapsed * 10
-      if (submarine.lastGlow > 8) {
-        submarine.lastGlow = 8
+      if (submarine.lastGlow > submarineDefaults.maxGlow) {
+        submarine.lastGlow = submarineDefaults.maxGlow
         submarine.glowIncreasing = false
       }
     } else {
       submarine.lastGlow -= game.time.physicsElapsed * 10
-      if (submarine.lastGlow < 1) {
-        submarine.lastGlow = 1
+      if (submarine.lastGlow < submarineDefaults.minGlow) {
+        submarine.lastGlow = submarineDefaults.minGlow
         submarine.glowIncreasing = true
       }
     }
@@ -124,14 +138,14 @@ SubmarineGroup.prototype.creteSubmarineDebris = function(x, y, lastGlow, glowInc
   var debris
 
   for (var i = 0; i < 8; i++) {
-    debris = this.game.add.sprite(x + debrisPositions[i][0] * 0.3, y + debrisPositions[i][1] * 0.3, 'submarine-debris')
+    debris = this.game.add.sprite(x + debrisPositions[i][0] * submarineDefaults.scale, y + debrisPositions[i][1] * submarineDefaults.scale, 'submarine-debris')
     debris.frameName = 'debris-' + (i + 1)
     debris.smoothed = false
-    debris.scale.setTo(0.3, 0.3)
-    debris.anchor.setTo(0,3, 0.3)
+    debris.scale.setTo(submarineDefaults.scale, submarineDefaults.scale)
+    debris.anchor.setTo(submarineDefaults.scale, submarineDefaults.scale)
 
     this.submarineDebrisGroup.add(debris)
-    debris.body.data.gravityScale = 0.3 + Math.random() / 12
+    debris.body.data.gravityScale = submarineDefaults.scale + Math.random() / 12
     debris.body.velocity.x = (Math.random() - 0.5) / 100;
 
     if (i == 1) {
