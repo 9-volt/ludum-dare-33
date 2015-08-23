@@ -3,6 +3,7 @@ var game = new Phaser.Game(700, 600, Phaser.AUTO, '', { preload: preload, create
   , food
   , background
   , terrain
+  , ceiling
   , light
   , text
   , musicBackground
@@ -35,6 +36,11 @@ function create() {
   food = new Food(game)
 
   terrain = new Terrain(game);
+  ceiling = new Terrain(game, {
+    height: 200,
+    startY: 1,
+    top: true
+  })
 
   light = new Light(game)
 
@@ -77,6 +83,7 @@ function update(game) {
     fish.moveLightX(updateStep)
     food.moveX(updateStep)
     terrain.moveX(updateStep)
+    ceiling.moveX(updateStep)
     text.moveX(updateStep)
 
     // Update position keepers

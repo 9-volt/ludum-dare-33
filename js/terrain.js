@@ -1,5 +1,5 @@
 var Noise = new SimplexNoise();
-
+var CurrentNoiseGen = 0;
 var Shape = function(options) {
   this.startX = options.startX;
   this.endX   = options.endX;
@@ -22,12 +22,13 @@ var Shape = function(options) {
 }
 
 Shape.prototype.generate = function() {
+  console.log(" generating for " + this.startY + " " + this.endY)
   for (var currentX = this.startX; currentX <= this.endX; currentX ++) {
-
-    var largeNoise = this.simplex.noise(currentX / 10000, 0)
-    var mediumNoise = this.simplex.noise(currentX / 200, 0)
-    var smallNoise = this.simplex.noise(currentX / 10, currentX / 10)
-    var miniNoise = this.simplex.noise(currentX / 1, currentX / 10)
+    CurrentNoiseGen +=1;
+    var largeNoise = this.simplex.noise(CurrentNoiseGen / 10000, 0)
+    var mediumNoise = this.simplex.noise(CurrentNoiseGen / 200, 0)
+    var smallNoise = this.simplex.noise(CurrentNoiseGen / 10, CurrentNoiseGen / 10)
+    var miniNoise = this.simplex.noise(CurrentNoiseGen / 1, CurrentNoiseGen / 10)
     var currentY = this.yScale(largeNoise + mediumNoise)
 
     if (currentX % this.collisionDiscretization == 0) {
@@ -56,15 +57,21 @@ var Terrain = function(game, options) {
   if (options == undefined) {
     options = {};
   };
+  console.log(options)
+  this.top = options.top
 
   this.width  = options.width  || game.world.bounds.width;//game.world.bounds.width;
-  this.height = options.height || game.world.bounds.height / 2;
+  this.height = options.height || game.world.bounds.height / 2 + 100;
 
   this.startX = options.startX || game.world.bounds.x;
   this.startY = options.startY || game.world.bounds.height;
 
   this.endX   = this.startX + this.width;
-  this.endY   = this.startY - this.height;
+  if(this.top){
+    this.endY   = this.startY + this.height;
+  } else {
+    this.endY   = this.startY - this.height;
+  }
   this.endXes = [];
 
   this.shapes = []
@@ -80,20 +87,26 @@ Terrain.prototype.addGround = function() {
     startY: this.startY, endY: this.endY
   });
   this.shapes.push(shape);
-  this.grounds.push(new Ground(this.game, shape))
+  this.grounds.push(new Ground(this.game, shape, this.top))
 
   this.endXes.push(this.endX)
   this.startX = this.endX;
   this.endX = this.startX + this.width;
 }
 
-var Ground = function(game, shape) {
+var Ground = function(game, shape, top) {
+  this.top = top || false
   this.game = game;
   this.shape = shape;
 
   this.ground = this.game.add.graphics(0, 0);
   this.groundTexture = this.game.add.graphics(0, 0);
-  this.groundTexture.beginFill(0x0d1229);
+
+  if(this.top) {
+    this.groundTexture.beginFill(0x0d1229);
+  } else {
+    this.groundTexture.beginFill(0x0d1229);
+  }
   var cap = this.shape.cap();
   var polygon = new Phaser.Polygon(cap.shape);
 
