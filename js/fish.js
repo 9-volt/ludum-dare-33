@@ -31,9 +31,11 @@ Fish.prototype.setup = function() {
 
 Fish.prototype.setupAnimations = function() {
   this._fish.smoothed = false
-  this._fish.animations.add('move', [0,1,2,3], 6, true)
+  var animationMove = this._fish.animations.add('move', [0,1,2,3], 6, false)
   var animationEat = this._fish.animations.add('eat', [4,5,6,7], 30, false)
   this._fish.play('move')
+
+  animationMove.onComplete.add(function() {})
 
   animationEat.onComplete.add(function(){
     this._fish.play('move')
@@ -141,6 +143,7 @@ Fish.prototype.moveLightX = function(offsetX) {
 Fish.prototype.accelerateY = function(acceleration) {
   this._fish.body.velocity.y -= acceleration
   this.game.controls.play('bulik')
+  this._fish.play('move')
 }
 
 Object.defineProperty(Fish.prototype, 'life', {
