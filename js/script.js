@@ -12,6 +12,7 @@ var game = new Phaser.Game(700, 600, Phaser.AUTO, '', { preload: preload, create
   , currentLifeRadius = 150
   , minLifeRadius = 10
   , maxLifeRadius = 250
+  , terrain
   , squidGroud
 
 function preload(game) {
@@ -63,6 +64,10 @@ function create() {
 
   // Set the blend mode to MULTIPLY. This will darken the colors of everything below this sprite.
   shadowImage.blendMode = Phaser.blendModes.MULTIPLY
+
+  terrain = new Terrain(game);
+  terrain.setup();
+
 
   game.input.keyboard.addCallbacks(game, function(ev) {
     if (ev.keyCode == 38) {
@@ -147,6 +152,7 @@ function update(game) {
     fish.body.x += updateStep
     light.body.x += updateStep
     updateSquids(updateStep)
+    terrain.moveX(updateStep)
 
     // Update position keepers
     lastGameXBound += updateStep
