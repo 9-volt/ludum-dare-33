@@ -119,6 +119,7 @@ function update(game) {
   // light.glow(fish.getLightX() - game.camera.x - (offsetX - game.camera.x), fish.getLightY(), currentLifeRadius)
   light.done()
 
-  // Dim light by 5 units every second
-  fish.life -= 5 * game.time.physicsElapsed
+  var progress = game.controls.progress
+    , rate = (Math.log10(Math.max(5, fish.life)) * Math.log10(progress * 1000)) + Math.log2(progress)
+  fish.life -= rate * game.time.physicsElapsed
 }

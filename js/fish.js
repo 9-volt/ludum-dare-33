@@ -3,7 +3,7 @@ var fishDefaults = {
     , fishMaxXSpeed: 200
     , fishAcceleration: 0.004
     , life: 150
-    , lowLife: 30
+    , lowLife: 50
     , minLife: 10
     , maxLife: 350
     , hitPenalty: 30
@@ -46,8 +46,14 @@ Fish.prototype.hitGround = function() {
   if (Date.now() - this._lastHit > fishDefaults.hitDelay) {
     this._lastHit = Date.now()
 
-    this.life -= fishDefaults.hitPenalty;
-    if(this.life < fishDefaults.minLife + 10) {
+    // If last hit takes almost all life, don't take it all, leave a bit for one more hit
+    if (this.life > fishDefaults.minLife + fishDefaults.hitPenalty * 0.5 && this.life < fishDefaults.hitPenalty + fishDefaults.minLife) {
+      this.life = fishDefaults.minLife + fishDefaults.hitPenalty * 0.1
+    } else {
+      this.life -= fishDefaults.hitPenalty;
+    }
+
+    if(this.life < fishDefaults.minLife + 1) {
       this.game.paused = true;
     }
   }
