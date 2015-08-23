@@ -5,7 +5,7 @@ function SubmarineGroup(game) {
 
 SubmarineGroup.prototype.chooseCoords = function(){
   var x = Math.random() * 500 + 700;
-  var y = 300;
+  var y = Math.random() * 200 + 200;
   return { x: x, y: y}
 }
 
