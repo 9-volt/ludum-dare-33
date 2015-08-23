@@ -56,10 +56,11 @@ var Terrain = function(game, options) {
   if (options == undefined) {
     options = {};
   };
-  this.width  = options.width  || 1000;//game.world.bounds.width;
+
+  this.width  = options.width  || 1100;//game.world.bounds.width;
   this.height = options.height || game.world.bounds.height / 2;
 
-  this.startX = options.startX || 0;
+  this.startX = options.startX || game.world.bounds.x;
   this.startY = options.startY || game.world.bounds.height;
 
   this.endX   = this.startX + this.width;
@@ -74,7 +75,6 @@ var Terrain = function(game, options) {
 }
 
 Terrain.prototype.addGround = function() {
-  console.log(this.startX, this.endX)
   var shape = new Shape({
     startX: this.startX, endX: this.endX,
     startY: this.startY, endY: this.endY
@@ -85,7 +85,6 @@ Terrain.prototype.addGround = function() {
   this.endXes.push(this.endX)
   this.startX = this.endX;
   this.endX = this.startX + this.width;
-  console.log(this.endXes)
 }
 
 var Ground = function(game, shape) {
@@ -117,20 +116,20 @@ Ground.prototype.moveX = function(step) {
 };
 
 Terrain.prototype.moveX = function(step) {
-  this.startX += step;
-  this.endX += step;
+  this.endXes = this.endXes.map(function(val){
+    return val + step
+  })
 
   if(this.game.camera.x > this.endXes[0]) {
-    console.log("camera")
-    console.log(this.game.camera.x)
-    console.log(gameDeltaX)
-    // console.log(fish._fish.position.x)
-
     this.grounds[0].destroy();
     this.grounds.shift();
     this.endXes.shift();
     this.addGround();
   }
+
+  this.startX += step;
+  this.endX += step;
+
   for (var i = 0; i < this.grounds.length; i++) {
     this.grounds[i].moveX(step);
   };
