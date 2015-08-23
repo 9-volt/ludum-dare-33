@@ -12,6 +12,7 @@ var game = new Phaser.Game(700, 600, Phaser.AUTO, '', { preload: preload, create
   , currentLifeRadius = 150
   , minLifeRadius = 10
   , maxLifeRadius = 250
+  , terrain
 
 function preload(game) {
   game.load.spritesheet('fish-sprite', 'data/fish-sprite.png', 80, 56, 19, 2, 2);
@@ -20,7 +21,6 @@ function preload(game) {
   game.load.image('light', 'data/light.png');
   game.load.physics('fish-data', 'data/fish-sprite.json');
 }
-
 
 function create() {
   game.world.setBounds(0, 0, game.width * 2, game.height);
@@ -60,6 +60,10 @@ function create() {
 
   // Set the blend mode to MULTIPLY. This will darken the colors of everything below this sprite.
   shadowImage.blendMode = Phaser.blendModes.MULTIPLY
+
+  terrain = new Terrain(game);
+  terrain.setup();
+
 
   game.input.keyboard.addCallbacks(game, function(ev) {
     if (ev.keyCode == 38) {
@@ -138,6 +142,7 @@ function update(game) {
     // Update entities positions
     fish.body.x += updateStep
     light.body.x += updateStep
+    terrain.moveX(updateStep)
 
     // Update position keepers
     lastGameXBound += updateStep
