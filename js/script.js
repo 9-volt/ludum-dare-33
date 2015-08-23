@@ -17,12 +17,12 @@ function preload(game) {
   game.load.physics('fish-data', 'assets/graphics/fish-sprite.json');
   game.load.bitmapFont('font', 'assets/fonts/carrier_command.png', 'assets/fonts/carrier_command.xml');
   game.load.audio('music-background', 'assets/music/anglerfish_mixdown2.mp3')
-  game.load.audio('music-low-life', 'assets/music/low life_01.wav')
-  game.load.audio('music-bulik', 'assets/music/bubble.wav')
+  game.load.audio('music-low-life', 'assets/music/low life.mp3')
+  game.load.audio('music-bulik', 'assets/music/bubble.mp3')
   game.load.image('bubble', 'assets/graphics/bubble.png');
   game.load.atlas('submarine-debris', 'assets/graphics/submarine-debris-sprite.png', 'assets/graphics/submarine-debris-sprite.json');
-  game.load.audio('music-bite1', 'assets/music/bite1.wav')
-  game.load.audio('music-bite2', 'assets/music/bite2.wav')
+  game.load.audio('music-bite1', 'assets/music/bite1.mp3')
+  game.load.audio('music-bite2', 'assets/music/bite2.mp3')
 }
 
 function create() {
