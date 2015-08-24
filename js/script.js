@@ -144,6 +144,9 @@ function reset() {
   controls.destroyStatsScreen()
   controls.progress = 0
 
+  controls.stopAll()
+  controls.play('background')
+
   gameDeltaX = 0
   // lastGameXBound = 0
   game.world.setBounds(-game.width * 0.5, 0, game.width * 2.5, game.height);
