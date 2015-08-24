@@ -54,7 +54,7 @@ Fish.prototype.hitGround = function() {
     }
 
     if(this.life < fishDefaults.minLife + 1) {
-      this.game.paused = true;
+      controls.lose()
     }
   }
 }

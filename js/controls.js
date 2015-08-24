@@ -35,6 +35,44 @@ Controls.prototype.setup = function() {
   this.tracks.bite2.loop = false
 }
 
+Controls.prototype.lose = function() {
+  this.game.paused = true;
+  var progress = Math.floor(this.progress).toString()
+  var dat = this
+  setTimeout(function() {
+    this._loseText = this.game.add.bitmapText(this.game.camera.x + 240, 100,  'font','Game Over', 34);
+    this._loseText.fixedToCamera = true
+    dat.checkScore()
+    this._scoreString = "Your score: " + progress
+    this._highScoreString = "High score: " + dat.readHighScore()
+    this._scoreText = this.game.add.bitmapText(this.game.camera.x + 140, 200,  'font', this._scoreString , 34);
+    this._highScoreText = this.game.add.bitmapText(this.game.camera.x + 140, 300,  'font', this._highScoreString, 34);
+
+    this._restartText = this.game.add.bitmapText(this.game.camera.x + 100, 500,  'font', "click to restart", 34);
+    this._restartText.inputEnabled = true;
+    this.game.input.onDown.add(function() { dat.restart() })
+  }, 100);
+};
+
+Controls.prototype.readHighScore = function() {
+  return parseFloat(Cookies.get("highScore"));
+};
+
+Controls.prototype.setHighScore = function(score) {
+  Cookies.set("highScore", Math.floor(score))
+}
+
+Controls.prototype.checkScore = function() {
+  var highScore = this.readHighScore();
+  if (this.progress > highScore) {
+    this.setHighScore(this.progress)
+  };
+};
+
+Controls.prototype.restart = function() {
+  window.location.reload();
+};
+
 Controls.prototype.update = function() {
   this.progress += this.game.time.physicsElapsed
   this._text.text = pad(Math.floor(this.progress), 5) // Progresse in physics seconds
