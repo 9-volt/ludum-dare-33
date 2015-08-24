@@ -7,6 +7,7 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'angler-fish-9volt', {preload:
   , light
   , controls
   , collisionGroups
+  , deathTime = 0
 
 // By default assets are not loaded
 game.assetsAreLoaded = false
@@ -130,6 +131,8 @@ var updateStep = 200
   , lastGameXBound = 0
 
 function reset() {
+  if (Date.now() - deathTime < 2000) return false;
+
   controls.destroyStatsScreen()
   controls.progress = 0
 
@@ -149,6 +152,7 @@ function reset() {
 
 function pause() {
   if (game.isPaused) return false;
+  deathTime = Date.now()
 
   // Play only death sound
   controls.stopAll()
