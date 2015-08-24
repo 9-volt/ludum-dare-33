@@ -21,9 +21,9 @@ SubmarineGroup.prototype.setup = function(){
 }
 
 SubmarineGroup.prototype.chooseCoords = function(){
-  var x = Math.random() * 500 + 700;
+  var x = Math.random() * 300 + 700;
   var y = Math.random() * 200 + 200;
-  return { x: x, y: y}
+  return {x: x, y: y}
 }
 
 SubmarineGroup.prototype.update = function() {
