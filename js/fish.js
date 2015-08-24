@@ -55,10 +55,15 @@ Fish.prototype.hitGround = function() {
   if (Date.now() - this._lastHit > fishDefaults.hitDelay) {
     this._lastHit = Date.now()
 
+    if (!this.game.isPaused) {
+      this.game.controls.play('hit')
+    }
+
     this.life -= fishDefaults.hitPenalty;
 
-    if(this.life < fishDefaults.minLife + 1) {
+    if(this.life < fishDefaults.minLife + 1 && !this.game.isPaused) {
       pause()
+      this.game.controls.play('hit')
     }
   }
 }

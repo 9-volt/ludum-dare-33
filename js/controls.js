@@ -7,6 +7,10 @@ function Controls(game) {
     background: null
   , lowLife: null
   , bulik: null
+  , bite1: null
+  , bite2: null
+  , death: null
+  , hit: null
   }
 
   this.statsTexts = []
@@ -36,6 +40,9 @@ Controls.prototype.setup = function() {
 
   this.tracks.death = this.game.add.audio('music-death')
   this.tracks.death.loop = false
+
+  this.tracks.hit = this.game.add.audio('music-hit')
+  this.tracks.hit.loop = false
 }
 
 Controls.prototype.showStatsScreen = function() {

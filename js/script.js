@@ -40,6 +40,7 @@ function load(game) {
   game.load.audio('music-bite1', 'assets/music/bite1.mp3')
   game.load.audio('music-bite2', 'assets/music/bite2.mp3')
   game.load.audio('music-death', 'assets/music/death.mp3')
+  game.load.audio('music-hit', 'assets/music/hit.mp3')
 }
 
 function create(game) {
