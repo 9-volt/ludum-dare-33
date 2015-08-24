@@ -68,7 +68,7 @@ SubmarineGroup.prototype.update = function() {
     submarine.play('move', 8, true)
 
     this.submarineGroup.add(submarine)
-    submarine.body.data.gravityScale = (Math.random() - 0.5) / 7
+    submarine.body.data.gravityScale = (Math.random() - 0.5) * Math.log2(game.controls.progress * 1000) / 100
     this.game.add.tween(submarine.body).to({angle: -15}, 500, Phaser.Easing.Sinusoidal.InOut, true, 0,
       Number.POSITIVE_INFINITY, true);
     submarine.body.velocity.x = Math.random() * -50;
