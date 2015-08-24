@@ -5,6 +5,10 @@ function Food(game) {
   this.submarineGroup = new SubmarineGroup(game)
 }
 
+Food.prototype.reset = function() {
+  this.submarineGroup.reset()
+}
+
 Food.prototype.update = function() {
   // this.squidGroup.update()
   this.submarineGroup.update()

@@ -7,9 +7,14 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'angler-fish-9volt', {preload:
   , light
   , controls
   , collisionGroups
-  , isGameLoaded = false
 
-function preload(game) {}
+// By default assets are not loaded
+game.assetsAreLoaded = false
+game.isPaused = true // custom pause facility
+
+function preload(game) {
+  game.load.bitmapFont('font', 'assets/fonts/carrier_command.png', 'assets/fonts/carrier_command.xml');
+}
 
 function load(game) {
   game.load.spritesheet('fish-sprite', 'assets/graphics/fish-sprite.png', 112, 72, 8, 0, 2);
@@ -18,7 +23,6 @@ function load(game) {
   game.load.image('background', 'assets/graphics/background.png');
   game.load.image('light', 'assets/graphics/light.png');
   game.load.physics('fish-data', 'assets/graphics/fish-sprite.json');
-  game.load.bitmapFont('font', 'assets/fonts/carrier_command.png', 'assets/fonts/carrier_command.xml');
   game.load.audio('music-background', 'assets/music/background_music.mp3')
   game.load.audio('music-low-life', 'assets/music/low life.mp3')
   game.load.audio('music-bulik', 'assets/music/bubble.mp3')
@@ -26,11 +30,15 @@ function load(game) {
   game.load.atlas('submarine-debris', 'assets/graphics/submarine-debris-sprite.png', 'assets/graphics/submarine-debris-sprite.json');
   game.load.audio('music-bite1', 'assets/music/bite1.mp3')
   game.load.audio('music-bite2', 'assets/music/bite2.mp3')
+  game.load.audio('music-death', 'assets/music/death.mp3')
 }
 
 function create(game) {
   var preloading = document.getElementById('angler-fish-9volt-text')
   preloading.parentNode.removeChild(preloading)
+
+  controls = new Controls(game)
+  controls.showStatsScreen()
 
   // Progress bars
   var rectangle = new Phaser.Rectangle(50, game.height - 150, game.width - 100, 100)
@@ -54,8 +62,9 @@ function create(game) {
     game.debug.reset()
 
     // Start game
-    isGameLoaded = true
+    game.assetsAreLoaded = true
     start(game)
+    controls.showStatsScreen()
   }, game)
 
   // Load assets
@@ -97,14 +106,21 @@ function start(game) {
 
   light = new Light(game)
 
-  controls = new Controls(game)
+  controls.setup()
   game.controls = controls // You know why
   controls.play('background')
 
   // Check for spaces
   game.input.keyboard.addCallbacks(game, function(ev) {
     if (ev.keyCode == 32) {
-      fish.accelerateY(200)
+      // Restart game if it is paused
+      if (game.isPaused) {
+        if (game.assetsAreLoaded) {
+          reset()
+        }
+      } else {
+        fish.accelerateY(200)
+      }
     }
   })
 }
@@ -113,8 +129,43 @@ var updateStep = 200
   , gameDeltaX = 0
   , lastGameXBound = 0
 
+function reset() {
+  controls.destroyStatsScreen()
+  controls.progress = 0
+
+  gameDeltaX = 0
+  // lastGameXBound = 0
+  game.world.setBounds(-game.width * 0.5, 0, game.width * 2.5, game.height);
+  background.tilePosition.x = (game.width / 2 - 400);
+  this.game.camera.setPosition(-200, 0)
+
+  fish.reset()
+  food.reset()
+  terrain.reset()
+  ceiling.reset()
+
+  game.isPaused = false
+}
+
+function pause() {
+  if (game.isPaused) return false;
+
+  // Play only death sound
+  controls.stopAll()
+  controls.play('death')
+
+  game.isPaused = true
+
+  // Clear light
+  light.clear()
+
+  // Show stats
+  controls.showStatsScreen()
+}
+
 function update(game) {
-  if (!isGameLoaded) return false;
+  if (!game.assetsAreLoaded) return false;
+  if (game.isPaused) return false;
 
   fish.update()
   food.update()
@@ -156,7 +207,6 @@ function update(game) {
   }
 
   food.glow(light)
-  // light.glow(fish.getLightX() - game.camera.x - (offsetX - game.camera.x), fish.getLightY(), currentLifeRadius)
   light.done()
 
   var progress = game.controls.progress

@@ -65,16 +65,15 @@ Shape.prototype.cap = function() {
 
 var Terrain = function(game, options) {
   this.game = game;
-  if (options == undefined) {
-    options = {};
-  };
-  this.top = options.top
+  this.options = options || {}
 
-  this.width  = options.width  || game.world.bounds.width;//game.world.bounds.width;
-  this.height = options.height || game.world.bounds.height / 2 + 100;
+  this.top = this.options.top
 
-  this.startX = options.startX || game.world.bounds.x;
-  this.startY = options.startY || game.world.bounds.height;
+  this.width  = this.options.width  || game.world.bounds.width;//game.world.bounds.width;
+  this.height = this.options.height || game.world.bounds.height / 2 + 100;
+
+  this.startX = this.options.startX || game.world.bounds.x;
+  this.startY = this.options.startY || game.world.bounds.height;
 
   this.endX   = this.startX + this.width;
   if(this.top){
@@ -84,7 +83,31 @@ var Terrain = function(game, options) {
   }
   this.endXes = [];
 
-  this.shapes = []
+  this.grounds = []
+
+  this.addGround()
+  this.addGround()
+}
+
+Terrain.prototype.reset = function() {
+  CurrentNoiseGen = 0
+  CurrentTopNoiseGen = 0
+
+  this.startX = this.options.startX || game.world.bounds.x;
+  this.startY = this.options.startY || game.world.bounds.height;
+
+
+  this.endX   = this.startX + this.width;
+  if(this.top){
+    this.endY   = this.startY + this.height;
+  } else {
+    this.endY   = this.startY - this.height;
+  }
+  this.endXes = [];
+
+  for (var i = this.grounds.length - 1; i >= 0; i--) {
+    this.grounds[i].destroy()
+  }
   this.grounds = []
 
   this.addGround()
@@ -96,7 +119,7 @@ Terrain.prototype.addGround = function() {
     startX: this.startX, endX: this.endX,
     startY: this.startY, endY: this.endY, top: this.top
   });
-  this.shapes.push(shape);
+
   this.grounds.push(new Ground(this.game, shape, this.top))
 
   this.endXes.push(this.endX)

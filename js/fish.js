@@ -17,8 +17,8 @@ function Fish(game, food) {
 }
 
 Fish.prototype.setup = function() {
-  this._fish = game.add.sprite(200, 200, 'fish-sprite')
-  this._light = game.add.sprite(200, 200, 'light')
+  this._fish = game.add.sprite(200, 150, 'fish-sprite')
+  this._light = game.add.sprite(260, 175, 'light')
   this._life = fishDefaults.life
   this._lastHit = 0
 
@@ -27,6 +27,15 @@ Fish.prototype.setup = function() {
 
   this.setupAnimations()
   this.setupPhysics()
+}
+
+Fish.prototype.reset = function() {
+  this._life = fishDefaults.life
+  this._lastHit = 0
+  this._fish.body.x = 200
+  this._fish.body.y = 150
+  this._light.body.x = 260
+  this._light.body.y = 175
 }
 
 Fish.prototype.setupAnimations = function() {
@@ -49,7 +58,7 @@ Fish.prototype.hitGround = function() {
     this.life -= fishDefaults.hitPenalty;
 
     if(this.life < fishDefaults.minLife + 1) {
-      controls.lose()
+      pause()
     }
   }
 }
@@ -154,7 +163,7 @@ Object.defineProperty(Fish.prototype, 'life', {
 , set: function(value) {
     this._life = Math.max(fishDefaults.minLife, Math.min(fishDefaults.maxLife, value))
 
-    if (this._life < fishDefaults.lowLife) {
+    if (this._life < fishDefaults.lowLife && !game.isPaused) {
       this.game.controls.play('lowLife')
     } else {
       this.game.controls.stop('lowLife')

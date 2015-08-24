@@ -9,7 +9,7 @@ function Controls(game) {
   , bulik: null
   }
 
-  this.setup()
+  this.statsTexts = []
 }
 
 Controls.prototype.setup = function() {
@@ -33,30 +33,37 @@ Controls.prototype.setup = function() {
 
   this.tracks.bite2 = this.game.add.audio('music-bite2')
   this.tracks.bite2.loop = false
+
+  this.tracks.death = this.game.add.audio('music-death')
+  this.tracks.death.loop = false
 }
 
-Controls.prototype.lose = function() {
-  this.game.paused = true;
-  var that = this
+Controls.prototype.showStatsScreen = function() {
+  this.checkScore()
+  this.destroyStatsScreen()
 
-  setTimeout(function() {
-    that.checkScore()
+  var text1 = 'High Score: ' + this.getHighScore()
+    , text2 = 'Eat submarines'
+    , text3 = 'Avoid terrain'
+    , text4 = 'Keep light on'
+    , text5 = 'Press Space'
 
-    var text1 = 'High Score: ' + that.getHighScore()
-      , text2 = 'Eat submarines'
-      , text3 = 'Avoid terrain'
-      , text4 = 'Keep light on'
-      , text5 = 'Press Space'
+  this.statsTexts.push(this.game.add.bitmapText(100, 150, 'font', text1, 34))
+  this.statsTexts.push(this.game.add.bitmapText(200, 250, 'font', text2, 24))
+  this.statsTexts.push(this.game.add.bitmapText(200, 300, 'font', text3, 24))
+  this.statsTexts.push(this.game.add.bitmapText(200, 350, 'font', text4, 24))
+  this.statsTexts.push(this.game.add.bitmapText(160, 500, 'font', text5, 34))
 
-    this.game.add.bitmapText(this.game.camera.x + 100, 150, 'font', text1, 34);
-    this.game.add.bitmapText(this.game.camera.x + 200, 250, 'font', text2, 24);
-    this.game.add.bitmapText(this.game.camera.x + 200, 300, 'font', text3, 24);
-    this.game.add.bitmapText(this.game.camera.x + 200, 350, 'font', text4, 24);
-    this.game.add.bitmapText(this.game.camera.x + 160, 500, 'font', text5, 34);
+  for (var i = 0; i < this.statsTexts.length; i++) {
+    this.statsTexts[i].fixedToCamera = true
+  }
+}
 
-    this.game.input.onDown.add(function() { that.restart() })
-  }, 100);
-};
+Controls.prototype.destroyStatsScreen = function() {
+  for (var i = this.statsTexts.length - 1; i >= 0; i--) {
+    this.statsTexts[i].destroy()
+  }
+}
 
 Controls.prototype.getHighScore = function() {
   return parseFloat(Cookies.get('anglerFish9voltHighScore')) || 0
@@ -71,10 +78,6 @@ Controls.prototype.checkScore = function() {
     this.setHighScore(this.progress)
   }
 }
-
-Controls.prototype.restart = function() {
-  window.location.reload();
-};
 
 Controls.prototype.update = function() {
   this.progress += this.game.time.physicsElapsed
@@ -105,6 +108,12 @@ Controls.prototype.stop = function(type) {
 
   if (track.isPlaying) {
     track.stop()
+  }
+}
+
+Controls.prototype.stopAll = function() {
+  for (key in this.tracks) {
+    this.stop(key)
   }
 }
 

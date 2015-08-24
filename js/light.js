@@ -17,6 +17,7 @@ Light.prototype.setup = function() {
 
 Light.prototype.setX = function(offset) {
   if (!this.lightIsEnabled) return false;
+  if (this.game.isPaused) return false;
 
   // return true
   this.shadowImage.x = offset
@@ -26,12 +27,19 @@ Light.prototype.setX = function(offset) {
   this.shadowTexture.context.fillRect(0, 0, this.game.width, this.game.height)
 }
 
+Light.prototype.clear = function() {
+  this.shadowTexture.cls()
+  this.shadowTexture.dirty = true
+}
+
 Light.prototype.bringToTop = function() {
   this.shadowImage.bringToTop()
 };
 
 Light.prototype.glow = function(lightX, lightY, radius) {
   if (!this.lightIsEnabled) return false;
+  if (this.game.isPaused) return false;
+
   // Draw circle of light with a soft edge
   var gradient = this.shadowTexture.context.createRadialGradient(lightX, lightY, radius * 0.25, lightX, lightY, radius);
   gradient.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
@@ -45,6 +53,7 @@ Light.prototype.glow = function(lightX, lightY, radius) {
 
 Light.prototype.done = function() {
   if (!this.lightIsEnabled) return false;
+  if (this.game.isPaused) return false;
 
   // This just tells the engine it should update the texture cache
   this.shadowTexture.dirty = true

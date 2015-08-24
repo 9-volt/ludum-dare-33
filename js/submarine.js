@@ -20,6 +20,28 @@ SubmarineGroup.prototype.setup = function(){
   this._lastCreatedAt = 0
 }
 
+SubmarineGroup.prototype.reset = function(){
+  this._lastCreatedAt = 0
+
+  var i
+
+  // Destroy all submarines
+  for (i = this.submarineGroup.children.length - 1; i >= 0; i--) {
+    submarine = this.submarineGroup.children[i]
+    this.submarineGroup.removeChild(submarine)
+    submarine.destroy()
+    submarine = null;
+  }
+
+  // Destroy all debris
+  for (i = this.submarineDebrisGroup.children.length - 1; i >= 0; i--) {
+    submarine = this.submarineDebrisGroup.children[i]
+    this.submarineDebrisGroup.removeChild(submarine)
+    submarine.destroy()
+    submarine = null;
+  }
+}
+
 SubmarineGroup.prototype.chooseCoords = function(){
   var x = Math.random() * 300 + 700;
   var y = Math.random() * 200 + 200;
