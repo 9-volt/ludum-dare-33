@@ -37,19 +37,23 @@ Controls.prototype.setup = function() {
 
 Controls.prototype.lose = function() {
   this.game.paused = true;
-  var progress = Math.floor(this.progress).toString()
   var dat = this
-  setTimeout(function() {
-    this._loseText = this.game.add.bitmapText(this.game.camera.x + 240, 100,  'font','Game Over', 34);
-    this._loseText.fixedToCamera = true
-    dat.checkScore()
-    this._scoreString = "Your score: " + progress
-    this._highScoreString = "High score: " + dat.readHighScore()
-    this._scoreText = this.game.add.bitmapText(this.game.camera.x + 140, 200,  'font', this._scoreString , 34);
-    this._highScoreText = this.game.add.bitmapText(this.game.camera.x + 140, 300,  'font', this._highScoreString, 34);
 
-    this._restartText = this.game.add.bitmapText(this.game.camera.x + 100, 500,  'font', "click to restart", 34);
-    this._restartText.inputEnabled = true;
+  setTimeout(function() {
+    dat.checkScore()
+
+    var text1 = 'High Score: ' + dat.readHighScore()
+      , text2 = 'Eat submarines'
+      , text3 = 'Avoid terrain'
+      , text4 = 'Keep light on'
+      , text5 = 'Press Space'
+
+    this.game.add.bitmapText(this.game.camera.x + 100, 150, 'font', text1, 34);
+    this.game.add.bitmapText(this.game.camera.x + 200, 250, 'font', text2, 24);
+    this.game.add.bitmapText(this.game.camera.x + 200, 300, 'font', text3, 24);
+    this.game.add.bitmapText(this.game.camera.x + 200, 350, 'font', text4, 24);
+    this.game.add.bitmapText(this.game.camera.x + 160, 500, 'font', text5, 34);
+
     this.game.input.onDown.add(function() { dat.restart() })
   }, 100);
 };
