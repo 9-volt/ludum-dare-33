@@ -37,12 +37,12 @@ Controls.prototype.setup = function() {
 
 Controls.prototype.lose = function() {
   this.game.paused = true;
-  var dat = this
+  var that = this
 
   setTimeout(function() {
-    dat.checkScore()
+    that.checkScore()
 
-    var text1 = 'High Score: ' + dat.readHighScore()
+    var text1 = 'High Score: ' + that.getHighScore()
       , text2 = 'Eat submarines'
       , text3 = 'Avoid terrain'
       , text4 = 'Keep light on'
@@ -54,24 +54,23 @@ Controls.prototype.lose = function() {
     this.game.add.bitmapText(this.game.camera.x + 200, 350, 'font', text4, 24);
     this.game.add.bitmapText(this.game.camera.x + 160, 500, 'font', text5, 34);
 
-    this.game.input.onDown.add(function() { dat.restart() })
+    this.game.input.onDown.add(function() { that.restart() })
   }, 100);
 };
 
-Controls.prototype.readHighScore = function() {
-  return parseFloat(Cookies.get("highScore"));
+Controls.prototype.getHighScore = function() {
+  return parseFloat(Cookies.get('anglerFish9voltHighScore')) || 0
 };
 
 Controls.prototype.setHighScore = function(score) {
-  Cookies.set("highScore", Math.floor(score))
+  Cookies.set('anglerFish9voltHighScore', Math.floor(score) || 0)
 }
 
 Controls.prototype.checkScore = function() {
-  var highScore = this.readHighScore();
-  if (this.progress > highScore) {
+  if (this.progress > this.getHighScore()) {
     this.setHighScore(this.progress)
-  };
-};
+  }
+}
 
 Controls.prototype.restart = function() {
   window.location.reload();
