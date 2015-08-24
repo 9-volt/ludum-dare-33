@@ -46,12 +46,7 @@ Fish.prototype.hitGround = function() {
   if (Date.now() - this._lastHit > fishDefaults.hitDelay) {
     this._lastHit = Date.now()
 
-    // If last hit takes almost all life, don't take it all, leave a bit for one more hit
-    if (this.life > fishDefaults.minLife + fishDefaults.hitPenalty * 0.5 && this.life < fishDefaults.hitPenalty + fishDefaults.minLife) {
-      this.life = fishDefaults.minLife + fishDefaults.hitPenalty * 0.1
-    } else {
-      this.life -= fishDefaults.hitPenalty;
-    }
+    this.life -= fishDefaults.hitPenalty;
 
     if(this.life < fishDefaults.minLife + 1) {
       controls.lose()
