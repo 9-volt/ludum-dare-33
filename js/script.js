@@ -1,3 +1,10 @@
+window.onkeydown = function(e) {
+  if(e.keyCode == 32 && e.target == document.body) {
+    e.preventDefault();
+    return false;
+  }
+};
+
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'angler-fish-9volt', {preload: preload, create: create, update: update})
   , fish
   , food
