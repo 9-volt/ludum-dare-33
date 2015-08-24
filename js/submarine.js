@@ -52,8 +52,9 @@ SubmarineGroup.prototype.update = function() {
     }
   }
 
-  // Allways have up to 3 submarines
-  while (this.submarineGroup.length < submarineDefaults.maxCount) {
+  // Allways have from 2 to 6 fishes
+  var maxCount = Math.max(2, 20 - Math.log2(game.controls.progress * 1000))
+  while (this.submarineGroup.length < maxCount) {
     if (Date.now() - this._lastCreatedAt < submarineDefaults.creationDelay) break;
     this._lastCreatedAt = Date.now()
 
