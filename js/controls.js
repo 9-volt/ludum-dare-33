@@ -53,6 +53,11 @@ Controls.prototype.showStatsScreen = function() {
   this.statsTexts.push(this.game.add.bitmapText(200, 300, 'font', text3, 24))
   this.statsTexts.push(this.game.add.bitmapText(200, 350, 'font', text4, 24))
   this.statsTexts.push(this.game.add.bitmapText(160, 500, 'font', text5, 34))
+  this.statsTexts.push(this.game.add.bitmapText(680, 575, 'font', '9vo.lt', 16))
+
+  this.statsTexts.push(this.game.add.button(710, 510, '9vo.lt', function(){
+    window.open('http://9vo.lt/', '_blank')
+  }, this))
 
   for (var i = 0; i < this.statsTexts.length; i++) {
     this.statsTexts[i].fixedToCamera = true

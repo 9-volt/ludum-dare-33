@@ -15,6 +15,7 @@ game.isPaused = true // custom pause facility
 
 function preload(game) {
   game.load.bitmapFont('font', 'assets/fonts/carrier_command.png', 'assets/fonts/carrier_command.xml');
+  game.load.image('9vo.lt', 'assets/graphics/9vo.lt.png');
 }
 
 function load(game) {
