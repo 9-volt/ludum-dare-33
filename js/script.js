@@ -1,4 +1,4 @@
-var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update })
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'angler-fish-9volt', {preload: preload, create: create, update: update})
   , fish
   , food
   , background
@@ -7,8 +7,11 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create
   , light
   , controls
   , collisionGroups
+  , isGameLoaded = false
 
-function preload(game) {
+function preload(game) {}
+
+function load(game) {
   game.load.spritesheet('fish-sprite', 'assets/graphics/fish-sprite.png', 112, 72, 8, 0, 2);
   game.load.spritesheet('submarine-sprite', 'assets/graphics/batiscaf-sprite.png', 108, 58, 4, 0, 2);
   game.load.spritesheet('audio-button', 'assets/graphics/audio-sprite.png', 32, 30, 2)
@@ -25,7 +28,42 @@ function preload(game) {
   game.load.audio('music-bite2', 'assets/music/bite2.mp3')
 }
 
-function create() {
+function create(game) {
+  var preloading = document.getElementById('angler-fish-9volt-text')
+  preloading.parentNode.removeChild(preloading)
+
+  // Progress bars
+  var rectangle = new Phaser.Rectangle(50, game.height - 150, game.width - 100, 100)
+    , rectangleInner = new Phaser.Rectangle(60, game.height - 140, 10, 80)
+    , maxInnerWidth = game.width - 120
+
+  game.debug.geom(rectangle,'#423e59')
+  game.debug.geom(rectangleInner, '#191a2f')
+
+  // On each file progress
+  game.load.onFileComplete.add(function(progress){
+    rectangleInner.resize(maxInnerWidth * progress / 100, 80)
+
+    game.debug.geom(rectangle,'#423e59')
+    game.debug.geom(rectangleInner, '#191a2f')
+  }, game)
+
+  // On load complete
+  game.load.onLoadComplete.add(function(){
+    // Reset debug info
+    game.debug.reset()
+
+    // Start game
+    isGameLoaded = true
+    start(game)
+  }, game)
+
+  // Load assets
+  load(game)
+  game.load.start()
+}
+
+function start(game) {
   game.world.setBounds(-game.width * 0.5, 0, game.width * 2.5, game.height);
 
   game.physics.startSystem(Phaser.Physics.P2JS)
@@ -76,6 +114,8 @@ var updateStep = 200
   , lastGameXBound = 0
 
 function update(game) {
+  if (!isGameLoaded) return false;
+
   fish.update()
   food.update()
   controls.update()

@@ -8,21 +8,27 @@
     margin: 0;
     text-align: center;
   }
-  .text {
-    font-family: Helvetica, Arial, sans-serif;
-    text-align: center;
-    width: 500px;
-    margin: 10px auto;
+  #angler-fish-9volt-text{
+    background: #2e2b4d;
+    width: 800px;
+    height: 600px;
+  }
+  #angler-fish-9volt-text span{
+    font-size: 50px;
+    color: white;
+    font-family: "Courier New", Courier, monospace;
+    padding: 250px 0 0;
+    display: inline-block;
   }
   </style>
 </head>
 <body>
-  <p class="text">
-  Press space to bob up. Avoid the terrain. Eat the submarines. 
-  <br/>
-  Keep the light on. Thanks.
-  </p>
-  <script src="js/phaser_2.4.3.js"></script>
+  <div id="angler-fish-9volt">
+    <div id="angler-fish-9volt-text">
+      <span>Loading Phaser</span>
+    </div>
+  </div>
+  <script src="js/phaser_2.4.3.min.js"></script>
   <script src="js/cookies.min.js"></script>
   <script src="js/helper.js"></script>
   <script src="js/simplex.js"></script>
