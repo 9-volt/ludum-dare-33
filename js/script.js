@@ -16,7 +16,7 @@ function preload(game) {
   game.load.image('light', 'assets/graphics/light.png');
   game.load.physics('fish-data', 'assets/graphics/fish-sprite.json');
   game.load.bitmapFont('font', 'assets/fonts/carrier_command.png', 'assets/fonts/carrier_command.xml');
-  game.load.audio('music-background', 'assets/music/background-music.mp3')
+  game.load.audio('music-background', 'assets/music/background_music.mp3')
   game.load.audio('music-low-life', 'assets/music/low life.mp3')
   game.load.audio('music-bulik', 'assets/music/bubble.mp3')
   game.load.image('bubble', 'assets/graphics/bubble.png');
