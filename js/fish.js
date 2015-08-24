@@ -128,6 +128,14 @@ Fish.prototype.update = function() {
   newDelay = Math.max(50, newDelay)
   newDelay = Math.min(150, newDelay)
   fish.animations.getAnimation('move').delay = newDelay
+
+  this.checkForOutOfBounds()
+}
+
+Fish.prototype.checkForOutOfBounds = function() {
+  if (this._fish.body.y < 0 || this._fish.body.y > this.game.height) {
+    pause()
+  }
 }
 
 Fish.prototype.getX = function() {
