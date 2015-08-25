@@ -17,8 +17,8 @@ function Fish(game, food) {
 }
 
 Fish.prototype.setup = function() {
-  this._fish = game.add.sprite(200, 150, 'fish-sprite')
-  this._light = game.add.sprite(260, 175, 'light')
+  this._fish = game.add.sprite(200, 200, 'fish-sprite')
+  this._light = game.add.sprite(260, 225, 'light')
   this._life = fishDefaults.life
   this._lastHit = 0
 
