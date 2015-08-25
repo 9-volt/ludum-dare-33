@@ -140,6 +140,7 @@ function start(game) {
 var updateStep = 200
   , gameDeltaX = 0
   , lastGameXBound = 0
+  , firstFrame = true
 
 function reset() {
   if (Date.now() - deathTime < 2000) return false;
@@ -154,7 +155,7 @@ function reset() {
   // lastGameXBound = 0
   game.world.setBounds(-game.width * 0.5, 0, game.width * 2.5, game.height);
   background.tilePosition.x = (game.width / 2 - 400);
-  this.game.camera.setPosition(-200, 0)
+  firstFrame = true
 
   fish.reset()
   food.reset()
@@ -184,6 +185,7 @@ function pause() {
 }
 
 function update(game) {
+  if (firstFrame) {firstFrame = false;return false;}
   if (!game.assetsAreLoaded) return false;
   if (game.isPaused) return false;
 
