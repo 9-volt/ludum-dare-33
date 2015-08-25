@@ -133,6 +133,8 @@ function start(game) {
       }
     }
   })
+
+  ga && ga('send', 'event', 'game', 'start');
 }
 
 var updateStep = 200
@@ -160,6 +162,8 @@ function reset() {
   ceiling.reset()
 
   game.isPaused = false
+
+  ga && ga('send', 'event', 'game', 'restart');
 }
 
 function pause() {
