@@ -8,7 +8,7 @@ var fishDefaults = {
     , maxLife: 350
     , hitPenalty: 30
     , foodLife: 25
-    , hitDelay: 300 // at most one hit every X milliseconds
+    , hitDelay: 200 // at most one hit every X milliseconds
     }
 
 function Fish(game, food) {
