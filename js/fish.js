@@ -2,7 +2,7 @@ var fishDefaults = {
       fishMinXSpeed: 100
     , fishMaxXSpeed: 200
     , fishAcceleration: 0.004
-    , life: 150
+    , life: 250
     , lowLife: 50
     , minLife: 10
     , maxLife: 350
